@@ -6,8 +6,11 @@ authors = [""]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+numpy = "*"
+tensorflow = "2.*"
 
 [tool.poetry.dev-dependencies]
+jupyter = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
