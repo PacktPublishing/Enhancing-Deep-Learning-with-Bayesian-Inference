@@ -4,13 +4,11 @@ import numpy as np
 import pickle
 
 import gzip
-
 import pbp
 
 class PBP_net:
-
     def __init__(self, X_train, y_train, n_hidden, n_epochs = 40,
-                 normalize = False):
+        normalize = False):
 
         """
             Constructor for the class implementing a Bayesian neural network
@@ -43,10 +41,18 @@ class PBP_net:
             self.mean_X_train = np.zeros(X_train.shape[ 1 ])
 
         X_train = (X_train - np.full(X_train.shape, self.mean_X_train)) / \
-                  np.full(X_train.shape, self.std_X_train)
+            np.full(X_train.shape, self.std_X_train)
+        
+        print(f"{X_train.shape}")
+        print(X_train.mean(), "X_train mean")
+        print(X_train.std(), "X_train std")
 
         self.mean_y_train = np.mean(y_train)
         self.std_y_train = np.std(y_train)
+
+        print(y_train.shape)
+        print(self.mean_y_train)
+        print(self.std_y_train)
 
         y_train_normalized = (y_train - self.mean_y_train) / self.std_y_train
 
@@ -54,6 +60,7 @@ class PBP_net:
 
         n_units_per_layer = \
             np.concatenate(([ X_train.shape[ 1 ] ], n_hidden, [ 1 ]))
+        print(n_units_per_layer)
         self.pbp_instance = \
             pbp.PBP(n_units_per_layer, self.mean_y_train, self.std_y_train)
 
@@ -72,13 +79,13 @@ class PBP_net:
             @param y_train      Vector with the target variables for the
                                 training data.
             @param n_epochs     Numer of epochs for which to train the
-                                network.
+                                network. 
         """
 
-        # We normalize the training data
+        # We normalize the training data 
 
         X_train = (X_train - np.full(X_train.shape, self.mean_X_train)) / \
-                  np.full(X_train.shape, self.std_X_train)
+            np.full(X_train.shape, self.std_X_train)
 
         y_train_normalized = (y_train - self.mean_y_train) / self.std_y_train
 
@@ -90,8 +97,8 @@ class PBP_net:
             Function for making predictions with the Bayesian neural network.
 
             @param X_test   The matrix of features for the test data
-
-
+            
+    
             @return m       The predictive mean for the test target variables.
             @return v       The predictive variance for the test target
                             variables.
@@ -104,7 +111,7 @@ class PBP_net:
         # We normalize the test set
 
         X_test = (X_test - np.full(X_test.shape, self.mean_X_train)) / \
-                 np.full(X_test.shape, self.std_X_train)
+            np.full(X_test.shape, self.std_X_train)
 
         # We compute the predictive mean and variance for the target variables
         # of the test data
@@ -121,8 +128,8 @@ class PBP_net:
             Function for making predictions with the Bayesian neural network.
 
             @param X_test   The matrix of features for the test data
-
-
+            
+    
             @return o       The predictive value for the test target variables.
 
         """
@@ -132,7 +139,7 @@ class PBP_net:
         # We normalize the test set
 
         X_test = (X_test - np.full(X_test.shape, self.mean_X_train)) / \
-                 np.full(X_test.shape, self.std_X_train)
+            np.full(X_test.shape, self.std_X_train)
 
         # We compute the predictive mean and variance for the target variables
         # of the test data
@@ -150,7 +157,7 @@ class PBP_net:
             to the weights distribution.
 
         """
-
+ 
         self.pbp_instance.sample_w()
 
     def save_to_file(self, filename):
@@ -159,7 +166,7 @@ class PBP_net:
             Function that stores the network in a file.
 
             @param filename   The name of the file.
-
+            
         """
 
         # We save the network to a file using pickle
@@ -178,13 +185,13 @@ def load_PBP_net_from_file(filename):
         Function that load a network from a file.
 
         @param filename   The name of the file.
-
+        
     """
 
     def load_object(filename):
 
         with gzip.GzipFile(filename, 'rb') as \
-                source: result = source.read()
+            source: result = source.read()
         ret = pickle.loads(result)
         source.close()
 

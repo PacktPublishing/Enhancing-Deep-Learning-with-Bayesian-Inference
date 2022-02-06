@@ -8,9 +8,19 @@ authors = [""]
 python = "^3.8"
 numpy = "*"
 tensorflow = "2.*"
+pandas = "*"
+# Added to port PBP code to TF
+Theano = {version = "*", optional = true}
+
+
+[tool.poetry.extras]
+# To port pbp
+pbp = ["theano"]
 
 [tool.poetry.dev-dependencies]
 jupyter = "*"
+typing-extensions = "*"
+ipdb = "*"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
