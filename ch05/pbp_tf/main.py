@@ -27,7 +27,8 @@ def main():
 
     # We compute the test log-likelihood
     test_ll = np.mean(
-        -0.5 * np.log(2 * math.pi * (v + v_noise)) - 0.5 * (y_test - m) ** 2 / (v + v_noise)
+        -0.5 * np.log(2 * math.pi * (v + v_noise))
+        - 0.5 * (y_test - m) ** 2 / (v + v_noise)
     )
     print(test_ll)
 
@@ -53,5 +54,5 @@ def get_data():
     return X_train, y_train, X_test, y_test
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

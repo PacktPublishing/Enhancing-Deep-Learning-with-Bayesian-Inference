@@ -5,10 +5,13 @@ description = ""
 authors = [""]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.11"
 numpy = "*"
-tensorflow = "2.*"
 pandas = "*"
+tensorflow-probability = "*"
+tensorflow = "^2.8.0"
+scikit-learn = "*"
+matplotlib = "*"
 # Added to port PBP code to TF
 Theano = {version = "*", optional = true}
 
