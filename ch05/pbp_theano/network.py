@@ -6,8 +6,6 @@ import theano.tensor as T
 
 import network_layer
 
-import ipdb
-
 
 class Network:
     def __init__(self, m_w_init, v_w_init, a_init, b_init):

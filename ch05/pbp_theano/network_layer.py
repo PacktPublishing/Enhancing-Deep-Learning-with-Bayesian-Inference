@@ -3,7 +3,6 @@ import math
 import theano
 
 import theano.tensor as T
-import ipdb
 
 
 class Network_layer:
@@ -54,9 +53,6 @@ class Network_layer:
         m_w_previous_with_bias = T.concatenate([m_w_previous, T.alloc(1, 1)], 0)
         v_w_previous_with_bias = T.concatenate([v_w_previous, T.alloc(0, 1)], 0)
         # We compute the mean and variance after the linear operation
-        import ipdb
-
-        ipdb.set_trace()
 
         m_linear = T.dot(self.m_w, m_w_previous_with_bias) / T.sqrt(self.n_inputs)
         v_linear = (

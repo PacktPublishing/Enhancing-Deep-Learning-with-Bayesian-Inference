@@ -2,15 +2,18 @@ import os
 import pandas as pd
 import math
 import numpy as np
-from .PBP_net import PBP_net
+from PBP_net import PBP_net
 
 os.environ["KERAS_BACKEND"] = "theano"
 np.random.seed(1)
 
 
 def main():
+    print("getting data..")
     X_train, y_train, X_test, y_test = get_data()
+    print("Training..")
     net = train(X_train, y_train)
+    print("Inference..")
     rmse, test_ll = predict(net, X_test, y_test)
     print(rmse, test_ll)
 
