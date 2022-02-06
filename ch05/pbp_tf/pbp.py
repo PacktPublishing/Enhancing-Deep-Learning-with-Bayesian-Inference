@@ -2,6 +2,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+
 # import theano
 # import theano.tensor as T
 from ch05.pbp_tf import network
@@ -22,7 +23,15 @@ class PBP:
         params = self.prior.get_initial_params()
 
         for key, param in params.items():
-            theano_param = np.load(str(Path(__file__).parent.parent.parent / "tests" / "params" / f"{key}.npy"), allow_pickle=True)
+            theano_param = np.load(
+                str(
+                    Path(__file__).parent.parent.parent
+                    / "tests"
+                    / "params"
+                    / f"{key}.npy"
+                ),
+                allow_pickle=True,
+            )
             if isinstance(param, list):
                 for idx, x in enumerate(param):
                     assert x.shape == theano_param[idx].shape
@@ -53,16 +62,18 @@ class PBP:
         # )
 
         # We create a theano function for the network predictive distribution
-        self.predict_probabilistic = tf.function(func=self.network.output_probabilistic,
-                                                 # input_signature=[self.x]
-                                                 )
+        self.predict_probabilistic = tf.function(
+            func=self.network.output_probabilistic,
+            # input_signature=[self.x]
+        )
         # self.predict_probabilistic = theano.function(
         #     [self.x], self.network.output_probabilistic(self.x)
         # )
 
-        self.predict_deterministic = tf.function(func=self.network.output_deterministic,
-                                                 # input_signature=[self.x]
-                                                 )
+        self.predict_deterministic = tf.function(
+            func=self.network.output_deterministic,
+            # input_signature=[self.x]
+        )
         # self.predict_deterministic = theano.function(
         #     [self.x], self.network.output_deterministic(self.x)
         # )
@@ -108,14 +119,14 @@ class PBP:
         for i in range(X_test.shape[0]):
             m, v = self.predict_probabilistic(X_test[i, :])
             m = m * self.std_y_train + self.mean_y_train
-            v = v * self.std_y_train ** 2
+            v = v * self.std_y_train**2
             mean[i] = m
             variance[i] = v
 
         v_noise = (
             self.network.b.get_value()
             / (self.network.a.get_value() - 1)
-            * self.std_y_train ** 2
+            * self.std_y_train**2
         )
 
         return mean, variance, v_noise

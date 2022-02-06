@@ -1,4 +1,3 @@
-
 import math
 
 import theano
@@ -8,16 +7,18 @@ import ipdb
 
 
 class Network_layer:
-
-    def __init__(self, m_w_init, v_w_init, non_linear = True, layer_index: int = None):
+    def __init__(self, m_w_init, v_w_init, non_linear=True, layer_index: int = None):
 
         # We create the theano variables for the means and variances
-        self.m_w = theano.shared(value = m_w_init.astype(theano.config.floatX),
-            name='m_w', borrow = True)
-        self.v_w = theano.shared(value = v_w_init.astype(theano.config.floatX),
-            name='v_w', borrow = True)
-        self.w = theano.shared(value = m_w_init.astype(theano.config.floatX),
-            name='w', borrow = True)
+        self.m_w = theano.shared(
+            value=m_w_init.astype(theano.config.floatX), name="m_w", borrow=True
+        )
+        self.v_w = theano.shared(
+            value=v_w_init.astype(theano.config.floatX), name="v_w", borrow=True
+        )
+        self.w = theano.shared(
+            value=m_w_init.astype(theano.config.floatX), name="w", borrow=True
+        )
 
         # We store the type of activation function
 
@@ -25,7 +26,7 @@ class Network_layer:
 
         # We store the number of inputs
 
-        self.n_inputs = theano.shared(float(m_w_init.shape[ 1 ]))
+        self.n_inputs = theano.shared(float(m_w_init.shape[1]))
         print(layer_index, m_w_init.shape[1], layer_index)
 
     @staticmethod
@@ -50,20 +51,21 @@ class Network_layer:
 
     def output_probabilistic(self, m_w_previous, v_w_previous):
         # We add an additional deterministic input with mean 1 and variance 0
-        m_w_previous_with_bias = \
-            T.concatenate([m_w_previous, T.alloc(1, 1)], 0)
-        v_w_previous_with_bias = \
-            T.concatenate([ v_w_previous, T.alloc(0, 1) ], 0)
+        m_w_previous_with_bias = T.concatenate([m_w_previous, T.alloc(1, 1)], 0)
+        v_w_previous_with_bias = T.concatenate([v_w_previous, T.alloc(0, 1)], 0)
         # We compute the mean and variance after the linear operation
         import ipdb
+
         ipdb.set_trace()
 
         m_linear = T.dot(self.m_w, m_w_previous_with_bias) / T.sqrt(self.n_inputs)
-        v_linear = (T.dot(self.v_w, v_w_previous_with_bias) + \
-            T.dot(self.m_w**2, v_w_previous_with_bias) + \
-            T.dot(self.v_w, m_w_previous_with_bias**2)) / self.n_inputs
-        
-        if (self.non_linear):
+        v_linear = (
+            T.dot(self.v_w, v_w_previous_with_bias)
+            + T.dot(self.m_w**2, v_w_previous_with_bias)
+            + T.dot(self.v_w, m_w_previous_with_bias**2)
+        ) / self.n_inputs
+
+        if self.non_linear:
 
             # We compute the mean and variance after the ReLU activation
 
@@ -75,9 +77,9 @@ class Network_layer:
             v_aux = m_linear + T.sqrt(v_linear) * gamma_final
 
             m_a = Network_layer.n_cdf(alpha) * v_aux
-            v_a = m_a * v_aux * Network_layer.n_cdf(-alpha) + \
-                Network_layer.n_cdf(alpha) * v_linear * \
-                (1 - gamma_final * (gamma_final + alpha))
+            v_a = m_a * v_aux * Network_layer.n_cdf(-alpha) + Network_layer.n_cdf(
+                alpha
+            ) * v_linear * (1 - gamma_final * (gamma_final + alpha))
 
             return (m_a, v_a)
 
@@ -89,15 +91,15 @@ class Network_layer:
 
         # We add an additional input with value 1
 
-        output_previous_with_bias = \
-            T.concatenate([ output_previous, T.alloc(1, 1) ], 0) / \
-            T.sqrt(self.n_inputs)
+        output_previous_with_bias = T.concatenate(
+            [output_previous, T.alloc(1, 1)], 0
+        ) / T.sqrt(self.n_inputs)
 
         # We compute the mean and variance after the linear operation
 
         a = T.dot(self.w, output_previous_with_bias)
 
-        if (self.non_linear):
+        if self.non_linear:
 
             # We compute the ReLU activation
 

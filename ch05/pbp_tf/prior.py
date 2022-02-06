@@ -97,14 +97,14 @@ class Prior:
                         v = v_w_cav + b_w_cav / (a_w_cav - 1)
                         v1 = v_w_cav + b_w_cav / a_w_cav
                         v2 = v_w_cav + b_w_cav / (a_w_cav + 1)
-                        logZ = -0.5 * np.log(v) - 0.5 * m_w_cav ** 2 / v
-                        logZ1 = -0.5 * np.log(v1) - 0.5 * m_w_cav ** 2 / v1
-                        logZ2 = -0.5 * np.log(v2) - 0.5 * m_w_cav ** 2 / v2
+                        logZ = -0.5 * np.log(v) - 0.5 * m_w_cav**2 / v
+                        logZ1 = -0.5 * np.log(v1) - 0.5 * m_w_cav**2 / v1
+                        logZ2 = -0.5 * np.log(v2) - 0.5 * m_w_cav**2 / v2
                         d_logZ_d_m_w_cav = -m_w_cav / v
-                        d_logZ_d_v_w_cav = -0.5 / v + 0.5 * m_w_cav ** 2 / v ** 2
+                        d_logZ_d_v_w_cav = -0.5 / v + 0.5 * m_w_cav**2 / v**2
                         m_w_new = m_w_cav + v_w_cav * d_logZ_d_m_w_cav
-                        v_w_new = v_w_cav - v_w_cav ** 2 * (
-                            d_logZ_d_m_w_cav ** 2 - 2 * d_logZ_d_v_w_cav
+                        v_w_new = v_w_cav - v_w_cav**2 * (
+                            d_logZ_d_m_w_cav**2 - 2 * d_logZ_d_v_w_cav
                         )
                         a_w_new = 1.0 / (
                             np.exp(logZ2 - 2 * logZ1 + logZ) * (a_w_cav + 1) / a_w_cav

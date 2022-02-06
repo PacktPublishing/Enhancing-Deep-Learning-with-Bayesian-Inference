@@ -2,8 +2,9 @@ import os
 import pandas as pd
 import math
 import numpy as np
-from ch05.pbp_theano.PBP_net import PBP_net
-os.environ['KERAS_BACKEND'] = 'theano'
+from .PBP_net import PBP_net
+
+os.environ["KERAS_BACKEND"] = "theano"
 np.random.seed(1)
 
 
@@ -41,11 +42,7 @@ def train(X_train, y_train):
     # zero mean and unit standard deviation in the trainig set.
     n_hidden_units = 50
     net = PBP_net(
-        X_train,
-        y_train,
-        [n_hidden_units, n_hidden_units],
-        normalize=True,
-        n_epochs=40
+        X_train, y_train, [n_hidden_units, n_hidden_units], normalize=True, n_epochs=40
     )
     return net
 
@@ -54,13 +51,15 @@ def predict(net: PBP_net, X_test, y_test):
     # We make predictions for the test set
     m, v, v_noise = net.predict(X_test)
     # We compute the test RMSE
-    rmse = np.sqrt(np.mean((y_test - m)**2))
+    rmse = np.sqrt(np.mean((y_test - m) ** 2))
 
     # We compute the test log-likelihood
-    test_ll = np.mean(-0.5 * np.log(2 * math.pi * (v + v_noise)) - \
-                      0.5 * (y_test - m)**2 / (v + v_noise))
+    test_ll = np.mean(
+        -0.5 * np.log(2 * math.pi * (v + v_noise))
+        - 0.5 * (y_test - m) ** 2 / (v + v_noise)
+    )
     return rmse, test_ll
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

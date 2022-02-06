@@ -14,9 +14,13 @@ class Network:
         idx = 0
         if len(m_w_init) > 1:
             for idx, (m_w, v_w) in enumerate(zip(m_w_init[:-1], v_w_init[:-1])):
-                self.layers.append(network_layer.NetworkLayer(m_w, v_w, True, layer_index=idx))
+                self.layers.append(
+                    network_layer.NetworkLayer(m_w, v_w, True, layer_index=idx)
+                )
         self.layers.append(
-            network_layer.NetworkLayer(m_w_init[-1], v_w_init[-1], False, layer_index=idx+1)
+            network_layer.NetworkLayer(
+                m_w_init[-1], v_w_init[-1], False, layer_index=idx + 1
+            )
         )
 
         # We create mean and variance parameters from all layers
@@ -107,7 +111,8 @@ class Network:
         updates.append(
             (
                 self.a,
-                1.0 / (tf.math.exp(lo_3 - 2 * lo_2 + lo_1) * (self.a + 1) / self.a - 1.0),
+                1.0
+                / (tf.math.exp(lo_3 - 2 * lo_2 + lo_1) * (self.a + 1) / self.a - 1.0),
             )
         )
         updates.append(

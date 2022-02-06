@@ -34,7 +34,7 @@ class PBP_net:
 
         if normalize:
             self.std_X_train = np.std(X_train, 0)
-            self.std_X_train[self.std_X_train == 0] = 1.
+            self.std_X_train[self.std_X_train == 0] = 1.0
             self.mean_X_train = np.mean(X_train, 0)
         else:
             self.std_X_train = np.ones(X_train.shape[1])
@@ -46,7 +46,7 @@ class PBP_net:
 
         assert X_train.shape == (455, 13)
         assert X_train.mean() == 1.2961548806173255e-15
-        np.testing.assert_almost_equal(X_train.std(), 1.)
+        np.testing.assert_almost_equal(X_train.std(), 1.0)
         print("X_train looks good.")
 
         self.mean_y_train = np.mean(y_train)
@@ -61,7 +61,9 @@ class PBP_net:
 
         # We construct the network
 
-        n_units_per_layer = np.concatenate(([X_train.shape[1]], n_hidden, [1])).astype(np.float32)
+        n_units_per_layer = np.concatenate(([X_train.shape[1]], n_hidden, [1])).astype(
+            np.float32
+        )
         np.testing.assert_array_equal(n_units_per_layer, [13, 50, 50, 1])
         print("Hidden units look good.")
 
