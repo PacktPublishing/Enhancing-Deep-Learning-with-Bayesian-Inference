@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable, Union, List, Tuple
 import tensorflow as tf
 import tensorflow_probability as tfp
 import numpy as np
@@ -21,9 +21,9 @@ class PBP(ModelBase):
 
     def __init__(
         self,
-        units: Iterable[int],
+        units: List[int],
         *,
-        input_shape: Iterable[int] = (1,),
+        input_shape: Tuple[int] = (1,),
         dtype: Union[tf.dtypes.DType, np.dtype, str] = tf.float32
     ):
         """
