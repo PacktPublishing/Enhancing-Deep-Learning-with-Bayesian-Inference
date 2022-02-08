@@ -154,3 +154,7 @@ cython_debug/
 .DS_STORE
 .DS_Store
 */.DS_Store
+
+# exclude numpy files and images
+*.npy
+*.png
