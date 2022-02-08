@@ -15,18 +15,49 @@ tf.random.set_seed(0)
 
 
 def main():
-    X_test, X_train, y_train, y_test, x_scaler, y_scaler = get_data()
-    print("Fitting..")
+    print("Getting data..")
+    X_train, y_train, X_test, y_test, x_scaler, y_scaler = get_data()
+    print("Training..")
     pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
     pbp.fit(X_train, y_train, batch_size=8)
-
-    m, v, y_test = test(X_test, pbp, x_scaler, y_scaler, y_test)
-
+    print("Inference..")
+    m, v, y_test = predict(X_test, pbp, x_scaler, y_scaler, y_test)
+    print("Plot..")
     plot(X_test, m, v, y_scaler, y_test)
 
 
+def get_data():
+    X, y = datasets.load_boston(return_X_y=True)
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.1, random_state=0
+    )
+    x_scaler = StandardScaler()
+    y_scaler = StandardScaler()
+    X_train = x_scaler.fit_transform(X_train)
+    y_train = y_scaler.fit_transform(y_train.reshape(-1, 1))
+    return X_train, y_train, X_test, y_test, x_scaler, y_scaler
+
+
+def predict(X_test, pbp, x_scaler, y_scaler, y_test):
+    # normalise data
+    X_test = x_scaler.fit_transform(X_test)
+    y_test = y_scaler.fit_transform(y_test.reshape(-1, 1))
+    # perform inference
+    m, v = pbp.predict(X_test)
+    # calculate rmse and log-likelihood
+    m_squeezed, v_squeezed = tf.squeeze(m), tf.squeeze(v)
+    rmse = np.sqrt(np.mean((y_test - m_squeezed) ** 2))
+    print(f"{rmse=}")
+    test_ll = np.mean(
+        -0.5 * np.log(2 * math.pi * v_squeezed)
+        - 0.5 * (y_test - m_squeezed) ** 2 / v_squeezed
+    )
+    print(f"{test_ll=}")
+    return m, v, y_test
+
+
+
 def plot(X_test, m, v, y_scaler, y_test):
-    print("Plotting..")
     id = np.arange(X_test.shape[0])
     plt.figure(figsize=(15, 15))
     plt.plot(
@@ -43,36 +74,7 @@ def plot(X_test, m, v, y_scaler, y_test):
     plt.xlabel("data id")
     plt.ylabel("target")
     plt.legend()
-    plt.savefig(Path(__file__).parent / "pbp_results.png")
-
-
-def test(X_test, pbp, x_scaler, y_scaler, y_test):
-    print("Testing..")
-    X_test = x_scaler.fit_transform(X_test)
-    y_test = y_scaler.fit_transform(y_test.reshape(-1, 1))
-    print("Predicting..")
-    m, v = pbp.predict(X_test)
-    m_squeezed, v_squeezed = tf.squeeze(m), tf.squeeze(v)
-    rmse = np.sqrt(np.mean((y_test - m_squeezed) ** 2))
-    print(f"{rmse=}")
-    test_ll = np.mean(
-        -0.5 * np.log(2 * math.pi * v_squeezed)
-        - 0.5 * (y_test - m_squeezed) ** 2 / v_squeezed
-    )
-    print(f"{test_ll=}")
-    return m, v, y_test
-
-
-def get_data():
-    X, y = datasets.load_boston(return_X_y=True)
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.1, random_state=0
-    )
-    x_scaler = StandardScaler()
-    y_scaler = StandardScaler()
-    X_train = x_scaler.fit_transform(X_train)
-    y_train = y_scaler.fit_transform(y_train.reshape(-1, 1))
-    return X_test, X_train, y_train, y_test, x_scaler, y_scaler
+    plt.savefig(Path(__file__).parent / "pbp_results_tf.png")
 
 
 if __name__ == "__main__":
