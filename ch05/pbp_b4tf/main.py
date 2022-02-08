@@ -8,7 +8,7 @@ from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from pbp import PBP
+from ch05.pbp_b4tf.pbp import PBP
 
 np.random.seed(0)
 tf.random.set_seed(0)
@@ -16,13 +16,19 @@ tf.random.set_seed(0)
 
 def main():
     X_test, X_train, y_train, y_test, x_scaler, y_scaler = get_data()
-    print("Fitting..")
-    pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
-    pbp.fit(X_train, y_train, batch_size=8)
+
+    pbp = fit(X_train, y_train)
 
     m, v, y_test = test(X_test, pbp, x_scaler, y_scaler, y_test)
 
     plot(X_test, m, v, y_scaler, y_test)
+
+
+def fit(X_train, y_train):
+    print("Fitting..")
+    pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
+    pbp.fit(X_train, y_train, batch_size=8)
+    return pbp
 
 
 def plot(X_test, m, v, y_scaler, y_test):

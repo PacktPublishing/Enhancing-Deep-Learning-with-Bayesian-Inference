@@ -4,7 +4,7 @@ import theano
 
 import theano.tensor as T
 
-import network_layer
+from ch05.pbp_theano import network_layer
 
 
 class Network:

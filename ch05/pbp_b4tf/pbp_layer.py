@@ -3,8 +3,8 @@ from tensorflow.python.framework import tensor_shape
 
 import tensorflow_probability as tfp
 
-from gamma_initializer import ReciprocalGammaInitializer
-from utils import safe_div, non_negative_constraint
+from ch05.pbp_b4tf.gamma_initializer import ReciprocalGammaInitializer
+from ch05.pbp_b4tf.utils import safe_div, non_negative_constraint
 
 
 class PBPLayer(tf.keras.layers.Layer):
@@ -82,7 +82,7 @@ class PBPLayer(tf.keras.layers.Layer):
     @tf.function
     def apply_gradient(self, gradient):
         """
-        Applay gradient and update weights and bias
+        Apply gradient and update weights and bias
 
         Parameters
         ----------
@@ -219,6 +219,7 @@ class PBPReLULayer(PBPLayer):
         _alpha = safe_div(ma, _sqrt_v)
         _inv_alpha = safe_div(tf.constant(1.0, dtype=_alpha.dtype), _alpha)
         _cdf_alpha = self.Normal.cdf(_alpha)
+
         _gamma = tf.where(
             _alpha < -30,
             -_alpha + _inv_alpha * (-1 + 2 * tf.math.square(_inv_alpha)),

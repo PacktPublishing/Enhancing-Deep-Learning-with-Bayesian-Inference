@@ -5,10 +5,15 @@ import numpy as np
 import theano
 
 import theano.tensor as T
+from IPython import get_ipython
+if get_ipython().__class__.__name__ == "ZMQInteractiveShell":
+    from tqdm.notebook import tqdm
+else:
+    from tqdm import tqdm
 
-import network
+from ch05.pbp_theano import network
 
-import prior
+from ch05.pbp_theano import prior
 
 
 class PBP:
@@ -71,24 +76,16 @@ class PBP:
             params = self.prior.refine_prior(params)
             self.network.set_params(params)
 
-            sys.stdout.write("{}\n".format(0))
-            sys.stdout.flush()
-
-            for i in range(int(n_iterations) - 1):
-
+            for i in tqdm(range(int(n_iterations) - 1), total=int(n_iterations) - 1):
                 # We do one more pass
-
                 params = self.prior.get_params()
                 self.do_first_pass(X_train, y_train)
 
                 # We refine the prior
-
                 params = self.network.get_params()
                 params = self.prior.refine_prior(params)
                 self.network.set_params(params)
 
-                sys.stdout.write("{}\n".format(i + 1))
-                sys.stdout.flush()
 
     def get_deterministic_output(self, X_test):
 
@@ -122,7 +119,6 @@ class PBP:
 
         permutation = np.random.choice(range(X.shape[0]), X.shape[0], replace=False)
 
-        counter = 0
         for i in permutation:
 
             old_params = self.network.get_params()
@@ -130,15 +126,6 @@ class PBP:
             new_params = self.network.get_params()
             self.network.remove_invalid_updates(new_params, old_params)
             self.network.set_params(new_params)
-
-            if counter % 1000 == 0:
-                sys.stdout.write(".")
-                sys.stdout.flush()
-
-            counter += 1
-
-        sys.stdout.write("\n")
-        sys.stdout.flush()
 
     def sample_w(self):
 

@@ -1,8 +1,10 @@
 import os
-import pandas as pd
 import math
 import numpy as np
-from PBP_net import PBP_net
+import pandas as pd
+
+from ch05.pbp_b4tf.main import get_data
+from ch05.pbp_theano.PBP_net import PBP_net
 
 os.environ["KERAS_BACKEND"] = "theano"
 np.random.seed(1)
@@ -12,7 +14,7 @@ def main():
     print("getting data..")
     X_train, y_train, X_test, y_test = get_data()
     print("Training..")
-    net = train(X_train, y_train)
+    net = fit(X_train, y_train)
     print("Inference..")
     rmse, test_ll = predict(net, X_test, y_test)
     print(rmse, test_ll)
@@ -39,13 +41,13 @@ def get_data():
     return X_train, y_train, X_test, y_test
 
 
-def train(X_train, y_train):
+def fit(X_train, y_train):
     # We construct the network with one hidden layer with two-hidden layers
     # with 50 neurons in each one and normalizing the training features to have
     # zero mean and unit standard deviation in the trainig set.
     n_hidden_units = 50
     net = PBP_net(
-        X_train, y_train, [n_hidden_units, n_hidden_units], normalize=True, n_epochs=40
+        X_train, y_train, [n_hidden_units, n_hidden_units], normalize=False, n_epochs=40
     )
     return net
 

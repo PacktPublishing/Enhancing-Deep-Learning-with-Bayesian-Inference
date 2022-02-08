@@ -1,11 +1,19 @@
 from typing import Iterable, Union, List, Tuple
 import tensorflow as tf
+tf.random.set_seed(0)
 import tensorflow_probability as tfp
 import numpy as np
-from model_base import ModelBase
-from pbp_layer import PBPReLULayer, PBPLayer
+np.random.seed(0)
+from ch05.pbp_b4tf.model_base import ModelBase
+from IPython import get_ipython
+if get_ipython().__class__.__name__ == "ZMQInteractiveShell":
+    from tqdm.notebook import tqdm
+else:
+    from tqdm import tqdm
 
-from utils import safe_div, safe_exp
+from ch05.pbp_b4tf.pbp_layer import PBPReLULayer, PBPLayer
+
+from ch05.pbp_b4tf.utils import safe_div, safe_exp
 
 
 class PBP(ModelBase):
@@ -39,6 +47,7 @@ class PBP(ModelBase):
             Data type
         """
         super().__init__(dtype, input_shape, units[-1])
+        # hyper-prior for λ - precision parameter.
         self.alpha = tf.Variable(6.0, trainable=True, dtype=self.dtype)
         self.beta = tf.Variable(6.0, trainable=True, dtype=self.dtype)
 
@@ -59,7 +68,7 @@ class PBP(ModelBase):
         l.build(last_shape)
         self.layers.append(l)
 
-        self.trainables = [l.trainable_weights for l in self.layers]
+        self.weights_per_layer = [l.trainable_weights for l in self.layers]
 
         self.Normal = tfp.distributions.Normal(
             loc=tf.constant(0.0, dtype=self.dtype),
@@ -70,6 +79,7 @@ class PBP(ModelBase):
     @tf.function
     def _logZ(self, diff_square: tf.Tensor, v: tf.Tensor):
         v0 = v + 1e-6
+
         return tf.reduce_sum(
             -0.5 * (diff_square / v0) + self.log_inv_sqrt2pi - 0.5 * tf.math.log(v0)
         )
@@ -105,7 +115,7 @@ class PBP(ModelBase):
             - 0.5 * tf.math.log(safe_div(v1, v2) + 1e-6)
         )
 
-    def fit(self, x, y, batch_size: int = 16):
+    def fit(self, x, y, batch_size: int = 8, n_iterations: int = 1):
         """
         Fit posterior distribution with observation
 
@@ -116,7 +126,7 @@ class PBP(ModelBase):
         y : array-like
             Observed output
         batch_size : int, optional
-            Batch size. The default value is 16.
+            Batch size. The default value is 8.
 
         Warnings
         --------
@@ -127,20 +137,30 @@ class PBP(ModelBase):
 
         data = tf.data.Dataset.from_tensor_slices((x, y)).batch(batch_size)
 
-        for _x, _y in data:
-            self._fit(_x, _y)
+        for _ in tqdm(range(n_iterations), total=n_iterations):
+            for _x, _y in tqdm(data, total=x.shape[0] // batch_size):
+                self._fit(_x, _y)
 
     @tf.function
     def _fit(self, x: tf.Tensor, y: tf.Tensor):
+        """Fit on a batch of x and y"""
         with tf.GradientTape() as tape:
-            tape.watch(self.trainables)
+            tape.watch(self.weights_per_layer)
+
+            # forward pass through layers
             m, v = self._predict(x)
 
+            # Add beta / (self.alpha - 1) to the variance
             v0 = v + safe_div(self.beta, self.alpha - 1)
+            # Squared error
+            # JG: Only place where y is used in fit.
             diff_square = tf.math.square(y - m)
+            # JG: logarithm of marginal probability of the target variable?
             logZ0 = self._logZ(diff_square, v0)
 
-        grad = tape.gradient(logZ0, self.trainables)
+        # JG: end of first phase?
+
+        grad = tape.gradient(logZ0, self.weights_per_layer)
         for l, g in zip(self.layers, grad):
             l.apply_gradient(g)
 
@@ -161,7 +181,9 @@ class PBP(ModelBase):
 
         beta_denomi = tf.where(logZ_diff >= 0, Pos_where, Neg_where)
         self.beta.assign(
-            safe_div(self.beta, tf.maximum(beta_denomi, tf.zeros_like(self.beta)))
+            safe_div(
+                self.beta,
+                tf.maximum(beta_denomi, tf.zeros_like(self.beta)))
         )
 
         alpha_denomi = Z0Z2_Z1Z1 * safe_div(alpha1, self.alpha) - 1.0

@@ -3,7 +3,8 @@ import numpy as np
 import pickle
 
 import gzip
-import pbp
+
+from ch05.pbp_theano import pbp
 
 
 class PBP_net:
@@ -39,9 +40,9 @@ class PBP_net:
             self.std_X_train = np.ones(X_train.shape[1])
             self.mean_X_train = np.zeros(X_train.shape[1])
 
-        X_train = (X_train - np.full(X_train.shape, self.mean_X_train)) / np.full(
-            X_train.shape, self.std_X_train
-        )
+        # X_train = (X_train - np.full(X_train.shape, self.mean_X_train)) / np.full(
+        #     X_train.shape, self.std_X_train
+        # )
 
         print(f"{X_train.shape}")
         print(X_train.mean(), "X_train mean")
