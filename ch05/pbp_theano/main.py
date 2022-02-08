@@ -52,9 +52,13 @@ def fit(X_train, y_train):
     return net
 
 
-def predict(net: PBP_net, X_test, y_test):
+def predict(net: PBP_net, X_test, y_test, x_scaler, y_scaler, normalize: bool = True):
+    if normalize:
+        X_test = x_scaler.fit_transform(X_test)
+        y_test = y_scaler.fit_transform(y_test.reshape(-1, 1))
+
     # We make predictions for the test set
-    m, v, v_noise = net.predict(X_test)
+    m, v, v_noise = net.predict(X_test, normalize=False)
     # We compute the test RMSE
     rmse = np.sqrt(np.mean((y_test - m) ** 2))
 
@@ -63,7 +67,8 @@ def predict(net: PBP_net, X_test, y_test):
         -0.5 * np.log(2 * math.pi * (v + v_noise))
         - 0.5 * (y_test - m) ** 2 / (v + v_noise)
     )
-    return rmse, test_ll
+    print(f"{rmse=}, {test_ll=}")
+    return m, v
 
 
 if __name__ == "__main__":

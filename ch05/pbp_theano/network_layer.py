@@ -26,7 +26,6 @@ class Network_layer:
         # We store the number of inputs
 
         self.n_inputs = theano.shared(float(m_w_init.shape[1]))
-        print(layer_index, m_w_init.shape[1], layer_index)
 
     @staticmethod
     def n_pdf(x):

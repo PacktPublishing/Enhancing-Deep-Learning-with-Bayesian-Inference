@@ -19,7 +19,7 @@ def main():
 
     pbp = fit(X_train, y_train)
 
-    m, v, y_test = test(X_test, pbp, x_scaler, y_scaler, y_test)
+    m, v, y_test = predict(X_test, pbp, x_scaler, y_scaler, y_test)
 
     plot(X_test, m, v, y_scaler, y_test)
 
@@ -52,21 +52,19 @@ def plot(X_test, m, v, y_scaler, y_test):
     plt.savefig(Path(__file__).parent / "pbp_results.png")
 
 
-def test(X_test, pbp, x_scaler, y_scaler, y_test):
-    print("Testing..")
-    X_test = x_scaler.fit_transform(X_test)
-    y_test = y_scaler.fit_transform(y_test.reshape(-1, 1))
-    print("Predicting..")
+def predict(pbp, X_test, y_test, x_scaler, y_scaler, normalize: bool = True):
+    if normalize:
+        X_test = x_scaler.fit_transform(X_test)
+        y_test = y_scaler.fit_transform(y_test.reshape(-1, 1))
     m, v = pbp.predict(X_test)
     m_squeezed, v_squeezed = tf.squeeze(m), tf.squeeze(v)
     rmse = np.sqrt(np.mean((y_test - m_squeezed) ** 2))
-    print(f"{rmse=}")
     test_ll = np.mean(
         -0.5 * np.log(2 * math.pi * v_squeezed)
         - 0.5 * (y_test - m_squeezed) ** 2 / v_squeezed
     )
-    print(f"{test_ll=}")
-    return m, v, y_test
+    print(f"{rmse=}, {test_ll=}")
+    return m, v
 
 
 def get_data():
