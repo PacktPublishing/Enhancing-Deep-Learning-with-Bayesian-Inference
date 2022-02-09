@@ -115,7 +115,7 @@ class PBP(ModelBase):
             - 0.5 * tf.math.log(safe_div(v1, v2) + 1e-6)
         )
 
-    def fit(self, x, y, batch_size: int = 8, n_iterations: int = 1):
+    def fit(self, x, y, batch_size: int = 8, n_epochs: int = 1):
         """
         Fit posterior distribution with observation
 
@@ -137,8 +137,8 @@ class PBP(ModelBase):
 
         data = tf.data.Dataset.from_tensor_slices((x, y)).batch(batch_size)
 
-        for _ in tqdm(range(n_iterations), total=n_iterations):
-            for _x, _y in tqdm(data, total=x.shape[0] // batch_size):
+        for _ in tqdm(range(n_epochs), total=n_epochs):
+            for _x, _y in data:
                 self._fit(_x, _y)
 
     @tf.function

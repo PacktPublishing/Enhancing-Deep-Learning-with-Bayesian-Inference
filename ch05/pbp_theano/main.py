@@ -41,13 +41,13 @@ def get_data():
     return X_train, y_train, X_test, y_test
 
 
-def fit(X_train, y_train):
+def fit(X_train, y_train, n_epochs: int = 40):
     # We construct the network with one hidden layer with two-hidden layers
     # with 50 neurons in each one and normalizing the training features to have
     # zero mean and unit standard deviation in the trainig set.
     n_hidden_units = 50
     net = PBP_net(
-        X_train, y_train, [n_hidden_units, n_hidden_units], normalize=False, n_epochs=40
+        X_train, y_train, [n_hidden_units, n_hidden_units], normalize=False, n_epochs=n_epochs
     )
     return net
 
