@@ -24,32 +24,36 @@ def main():
     plot(X_test, m, v, y_scaler, y_test)
 
 
-def fit(X_train, y_train):
+def fit(X_train, y_train, n_epochs: int = 1):
     print("Fitting..")
     pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
-    pbp.fit(X_train, y_train, batch_size=8)
+    pbp.fit(X_train, y_train, batch_size=8, n_epochs=n_epochs)
     return pbp
 
 
-def plot(X_test, m, v, y_scaler, y_test):
+def plot(X_test, m, v, y_scaler, y_test, title: str = ""):
     print("Plotting..")
     id = np.arange(X_test.shape[0])
-    plt.figure(figsize=(15, 15))
+    plt.figure(figsize=(20, 10))
+    plt.title(title)
+    if len(y_test.shape) > 1:
+        y_test = y_test.squeeze()
     plt.plot(
-        id, y_scaler.inverse_transform(y_test), linestyle="", marker=".", label="data"
+        id, y_test, linestyle="", marker=".", label="data"
     )
-    plt.plot(id, y_scaler.inverse_transform(m), alpha=0.5, label="predict mean")
+    plt.plot(id, y_scaler.inverse_transform(m.reshape(-1, 1) if len(m.shape) == 1 else m), alpha=0.5, label="predict mean")
     plt.fill_between(
         id,
-        y_scaler.inverse_transform(m + tf.sqrt(v)).squeeze(),
-        y_scaler.inverse_transform(m - tf.sqrt(v)).squeeze(),
+        y_scaler.inverse_transform((m + tf.sqrt(v)).numpy().reshape(-1, 1)).squeeze(),
+        y_scaler.inverse_transform((m - tf.sqrt(v)).numpy().reshape(-1, 1)).squeeze(),
         alpha=0.5,
         label="credible interval",
     )
     plt.xlabel("data id")
     plt.ylabel("target")
+    plt.ylim(0, 70)
     plt.legend()
-    plt.savefig(Path(__file__).parent / "pbp_results.png")
+    plt.savefig(Path(__file__).parent / f"pbp_results_{title}.png")
 
 
 def predict(pbp, X_test, y_test, x_scaler, y_scaler, normalize: bool = True):
