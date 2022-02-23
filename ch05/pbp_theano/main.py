@@ -17,24 +17,23 @@ NUM_EPOCHS = 40
 
 def main():
     print("Get data..")
-    X_train_norm, y_train_norm, X_test, y_test, x_scaler, y_scaler = get_data(normalise_train=False)
+    X_train_norm, y_train_norm, X_test, y_test, x_scaler, y_scaler = get_data()
     # X_train_old, y_train_old, X_test_old, y_test_old = get_old_data()
 
     print("Fit..")
-    # set normalise=False because data has been normalised already
     model = fit(X_train_norm, y_train_norm, normalize=True, n_epochs=NUM_EPOCHS)
     # model = fit(X_train_old, y_train_old, normalize=True, n_epochs=NUM_EPOCHS)
 
 
     print("Predict..")
     m, v, y_test, rmse = predict(model, X_test, y_test)
-    # m, v, y_test = predict(model, X_test_old, y_test_old)
+    # m, v, y_test, rmse = predict(model, X_test_old, y_test_old)
 
     # print("Plot..")
     plot(X_test, y_test, m, v, NUM_EPOCHS, rmse)
 
 
-def get_data(normalise_train: bool = True, normalise_test: bool = False):
+def get_data(normalise_train: bool = False, normalise_test: bool = False):
     X, y = datasets.load_boston(return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.1, random_state=0

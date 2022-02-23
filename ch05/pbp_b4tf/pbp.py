@@ -45,16 +45,16 @@ class PBP(ModelBase):
         pi = tf.math.atan(tf.constant(1.0, dtype=self.dtype)) * 4
         self.log_inv_sqrt2pi = -0.5 * tf.math.log(2.0 * pi)
 
+        # Build hidden Layer's Activation (ReLU)
         last_shape = self.input_shape
         self.layers = []
         for u in units[:-1]:
-            # Hidden Layer's Activation is ReLU
             l = PBPReLULayer(u, dtype=self.dtype)
             l.build(last_shape)
             self.layers.append(l)
             last_shape = u
 
-        # Output Layer's Activation is Linear
+        # Build output Layer's Activation (Linear)
         l = PBPLayer(units[-1], dtype=self.dtype)
         l.build(last_shape)
         self.layers.append(l)
@@ -105,7 +105,7 @@ class PBP(ModelBase):
             - 0.5 * tf.math.log(safe_div(v1, v2) + 1e-6)
         )
 
-    def fit(self, x, y, batch_size: int = 16, n_epochs: int = 1):
+    def fit(self, x, y, batch_size: int = 16, n_epochs: int = 1, normalize: bool = False):
         """
         Fit posterior distribution with observation
 
@@ -124,6 +124,27 @@ class PBP(ModelBase):
         """
         x = self._ensure_input(x)
         y = self._ensure_output(y)
+
+        #############
+        # We normalize the training data to have zero mean and unit standard
+        # deviation in the training set if necessary
+        if normalize:
+            self.std_X_train = np.std(x, 0)
+            self.std_X_train[self.std_X_train == 0] = 1
+            self.mean_X_train = np.mean(x, 0)
+            self.std_y_train = np.std(y)
+            if self.std_y_train == 0.0:
+                self.std_y_train = 1.0
+            self.mean_y_train = np.mean(y)
+        else:
+            self.std_X_train = np.ones(x.shape[1])
+            self.mean_X_train = np.zeros(x.shape[1])
+            self.std_y_train = 1.0
+            self.mean_y_train = 0.0
+
+        x = (x - np.full(x.shape, self.mean_X_train)) / np.full(x.shape, self.std_X_train)
+        y = (y - self.mean_y_train) / self.std_y_train
+        #############
 
         data = tf.data.Dataset.from_tensor_slices((x, y)).batch(batch_size)
         for ind_epoch in range(n_epochs):
@@ -216,9 +237,35 @@ class PBP(ModelBase):
             Variance
         """
         x = self._ensure_input(x)
+
         m, v = self._predict(x)
 
-        return m, v + safe_div(self.beta, self.alpha - 1)
+        return m, v, safe_div(self.beta, self.alpha - 1)
+
+    def predict_theanolike(self, x):
+        """Predict distribution like theano."""
+        x = self._ensure_input(x)
+
+        #############
+        # We normalize the test set
+        x = (x - np.full(x.shape, self.mean_X_train)) / np.full(x.shape, self.std_X_train)
+        #############
+
+        m, v = self._predict(x)
+
+        #############
+        # add mean and std back to m and v
+        m = m * self.std_y_train + self.mean_y_train
+        v = v * self.std_y_train**2
+        #############
+
+        v_noise = (
+            self.beta
+            / (self.alpha - 1)
+            * self.std_y_train**2
+        )
+
+        return m, v, v_noise
 
     @tf.function
     def _predict(self, x: tf.Tensor):

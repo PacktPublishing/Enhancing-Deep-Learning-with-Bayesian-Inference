@@ -10,25 +10,25 @@ from sklearn.model_selection import train_test_split
 
 from pbp import PBP
 
-np.random.seed(0)
-tf.random.set_seed(0)
+np.random.seed(1)
+tf.random.set_seed(1)
 NUM_EPOCHS = 40
 
 def main():
     print("Get data..")
-    X_train_norm, y_train_norm, X_test, y_test, x_scaler, y_scaler = get_data()
+    X_train, y_train, X_test, y_test, x_scaler, y_scaler = get_data()
 
     print("Fit..")
-    model = fit(X_train_norm, y_train_norm, n_epochs=NUM_EPOCHS)
-    
+    model = fit(X_train, y_train, n_epochs=NUM_EPOCHS)
+
     print("Predict..")
-    m, v, y_test_norm, rmse = predict(model, X_test, y_test, x_scaler, y_scaler)
+    m, v, rmse = predict(model, X_test, y_test, x_scaler, y_scaler)
 
     print("Plot..")
-    plot(X_test, y_test_norm, m, v, y_scaler, NUM_EPOCHS, rmse)
+    plot(X_test, y_test, m, v, NUM_EPOCHS, rmse)
 
 
-def get_data(normalise_train: bool = True, normalise_test: bool = False):
+def get_data(normalise_train: bool = False, normalise_test: bool = False):
     X, y = datasets.load_boston(return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.1, random_state=0
@@ -47,40 +47,48 @@ def get_data(normalise_train: bool = True, normalise_test: bool = False):
 def fit(X_train, y_train, n_epochs: int = 1):
     """Fit model with pbp."""
     pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
-    pbp.fit(X_train, y_train, batch_size=8, n_epochs=n_epochs)
+    pbp.fit(X_train, y_train, batch_size=8, n_epochs=n_epochs, normalize=True)
     return pbp
 
 
 def predict(pbp, X_test, y_test, x_scaler, y_scaler):
-    # normalise data
-    X_test_norm = x_scaler.fit_transform(X_test)
-    y_test_norm = y_scaler.fit_transform(y_test.reshape(-1, 1))
-    # perform inference
-    m, v = pbp.predict(X_test_norm)
+    # perform inference on normalised data
+    m, v, v_noise = pbp.predict_theanolike(X_test)
+
+    # transform back to original space
+    m = np.squeeze(m.numpy())
+    v = np.squeeze(v.numpy())
+    v_noise = np.squeeze(v_noise.numpy().reshape(-1, 1))
+
     # calculate rmse
-    m_squeezed, v_squeezed = tf.squeeze(m), tf.squeeze(v)
-    rmse = np.sqrt(np.mean((y_test_norm - m_squeezed) ** 2))
+    rmse = np.sqrt(np.mean((y_test - m) ** 2))
     print(f"{rmse=}")
     # calculate log-likelihood
     test_ll = np.mean(
-        -0.5 * np.log(2 * math.pi * v_squeezed)
-        - 0.5 * (y_test_norm - m_squeezed) ** 2 / v_squeezed
+        -0.5 * np.log(2 * math.pi * v)
+        - 0.5 * (y_test - m) ** 2 / v
     )
     print(f"{test_ll=}")
-    return m, v, y_test_norm, rmse
+    # calculate log-likelihood with v_noise
+    test_ll_with_vnoise = np.mean(
+        -0.5 * np.log(2 * math.pi * (v + v_noise))
+        - 0.5 * (y_test - m) ** 2 / (v + v_noise)
+    )
+    print(f"{test_ll_with_vnoise=}")
+    return m, v, rmse
 
 
-def plot(X_test, y_test_norm, m, v, y_scaler, num_epochs, rmse):
+def plot(X_test, y_test, m, v, num_epochs, rmse):
     id = np.arange(X_test.shape[0])
     plt.figure(figsize=(15, 15))
     plt.plot(
-        id, y_scaler.inverse_transform(y_test_norm), linestyle="", marker=".", label="data"
+        id, y_test, linestyle="", marker=".", label="data"
     )
-    plt.plot(id, y_scaler.inverse_transform(m), alpha=0.5, label="predict mean")
+    plt.plot(id, m, alpha=0.5, label="predict mean")
     plt.fill_between(
         id,
-        y_scaler.inverse_transform(m + tf.sqrt(v)).squeeze(),
-        y_scaler.inverse_transform(m - tf.sqrt(v)).squeeze(),
+        m + np.sqrt(v),
+        m - np.sqrt(v),
         alpha=0.5,
         label="credible interval",
     )
