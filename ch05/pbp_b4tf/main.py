@@ -10,9 +10,11 @@ from sklearn.model_selection import train_test_split
 
 from pbp import PBP
 
-np.random.seed(1)
-tf.random.set_seed(1)
+
 NUM_EPOCHS = 40
+RANDOM_SEED = 3
+np.random.seed(RANDOM_SEED)
+tf.random.set_seed(RANDOM_SEED)
 
 def main():
     print("Get data..")
@@ -47,7 +49,7 @@ def get_data(normalise_train: bool = False, normalise_test: bool = False):
 def fit(X_train, y_train, n_epochs: int = 1):
     """Fit model with pbp."""
     pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
-    pbp.fit(X_train, y_train, batch_size=8, n_epochs=n_epochs, normalize=True)
+    pbp.fit(X_train, y_train, batch_size=1, n_epochs=n_epochs, normalize=True)
     return pbp
 
 
@@ -95,9 +97,9 @@ def plot(X_test, y_test, m, v, num_epochs, rmse):
     plt.xlabel("data id")
     plt.ylabel("target: home price")
     plt.ylim([-10, 60])
-    plt.title(f"Tensorflow, {num_epochs} epochs, rmse: {rmse}")
+    plt.title(f"Tensorflow, {num_epochs} epochs, random seed: {RANDOM_SEED}, rmse: {rmse}")
     plt.legend()
-    plt.savefig(Path(__file__).parent / f"pbp_results_tf_{num_epochs:02}.png")
+    plt.savefig(Path(__file__).parent / f"pbp_results_tf_{num_epochs:02}_{RANDOM_SEED}.png")
 
 
 if __name__ == "__main__":
