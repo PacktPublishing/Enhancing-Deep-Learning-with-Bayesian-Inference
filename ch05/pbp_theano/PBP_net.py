@@ -44,28 +44,26 @@ class PBP_net:
         )
 
         print(f"{X_train.shape}")
-        print(X_train.mean(), "X_train mean")
-        print(X_train.std(), "X_train std")
+        print(f"X_train mean, after normalisation: {X_train.mean()}")
+        print(f"X_train std, after normalisation: {X_train.std()}")
+
 
         self.mean_y_train = np.mean(y_train)
         self.std_y_train = np.std(y_train)
-
-        print(y_train.shape)
-        print(self.mean_y_train)
-        print(self.std_y_train)
-
         y_train_normalized = (y_train - self.mean_y_train) / self.std_y_train
 
-        # We construct the network
+        print(f"{y_train_normalized.shape}")
+        print(f"y_train mean, after normalisation: {y_train_normalized.mean()}")
+        print(f"y_train std, after normalisation: {y_train_normalized.std()}")
 
+        # We construct the network
         n_units_per_layer = np.concatenate(([X_train.shape[1]], n_hidden, [1]))
-        print(n_units_per_layer)
+        print(f"Number of units per layer: {n_units_per_layer}")
         self.pbp_instance = pbp.PBP(
             n_units_per_layer, self.mean_y_train, self.std_y_train
         )
 
         # We iterate the learning process
-
         self.pbp_instance.do_pbp(X_train, y_train_normalized, n_epochs)
 
         # We are done!
