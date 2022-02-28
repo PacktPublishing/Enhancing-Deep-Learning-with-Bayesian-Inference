@@ -11,8 +11,10 @@ import matplotlib.pyplot as plt
 
 
 os.environ["KERAS_BACKEND"] = "theano"
-np.random.seed(1)
-NUM_EPOCHS = 40
+
+NUM_EPOCHS = 1
+RANDOM_SEED = 1
+np.random.seed(RANDOM_SEED)
 
 
 def main():
@@ -108,9 +110,9 @@ def plot(X_test, y_test, m, v, num_epochs, rmse):
     plt.xlabel("data id")
     plt.ylabel("target: home price")
     plt.ylim([-10, 60])
-    plt.title(f"Theano, {num_epochs} epochs, rmse: {rmse}")
+    plt.title(f"Theano, {num_epochs} epochs, random seed: {RANDOM_SEED}, rmse: {rmse}")
     plt.legend()
-    plt.savefig(Path(__file__).parent / f"pbp_results_theano_{num_epochs:02}.png")
+    plt.savefig(Path(__file__).parent / f"pbp_results_theano_{num_epochs:02}_{RANDOM_SEED}.png")
 
 
 def get_old_data():
