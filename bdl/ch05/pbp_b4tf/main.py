@@ -4,17 +4,20 @@ from pathlib import Path
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from pbp import PBP
+from bdl.ch05.pbp_b4tf.pbp import PBP
 
 
-NUM_EPOCHS = 40
-RANDOM_SEED = 3
+NUM_EPOCHS = 1
+RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
 tf.random.set_seed(RANDOM_SEED)
+
 
 def main():
     print("Get data..")

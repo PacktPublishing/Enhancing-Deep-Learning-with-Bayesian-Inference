@@ -1,19 +1,22 @@
 import os
 import math
 import numpy as np
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import pandas as pd
 from pathlib import Path
-from PBP_net import PBP_net
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import matplotlib.pyplot as plt
 
+from bdl.ch05.pbp_theano.PBP_net import PBP_net
+
 
 os.environ["KERAS_BACKEND"] = "theano"
 
 NUM_EPOCHS = 1
-RANDOM_SEED = 1
+RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
 
 
@@ -25,7 +28,6 @@ def main():
     print("Fit..")
     model = fit(X_train_norm, y_train_norm, normalize=True, n_epochs=NUM_EPOCHS)
     # model = fit(X_train_old, y_train_old, normalize=True, n_epochs=NUM_EPOCHS)
-
 
     print("Predict..")
     m, v, y_test, rmse = predict(model, X_test, y_test)
@@ -59,7 +61,7 @@ def fit(
     normalize: bool = False,
 ):
     # squeeze y_train to reduce dims to expected dims for model fitting
-    y_train= np.squeeze(y_train)
+    y_train = np.squeeze(y_train)
     # fit the model
     net = PBP_net(
         X_train,

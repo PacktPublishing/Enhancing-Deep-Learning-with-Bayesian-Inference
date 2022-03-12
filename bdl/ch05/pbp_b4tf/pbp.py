@@ -2,10 +2,10 @@ from typing import Iterable, Union, List, Tuple
 import tensorflow as tf
 import tensorflow_probability as tfp
 import numpy as np
-from model_base import ModelBase
-from pbp_layer import PBPReLULayer, PBPLayer
+from bdl.ch05.pbp_b4tf.model_base import ModelBase
+from bdl.ch05.pbp_b4tf.pbp_layer import PBPReLULayer, PBPLayer
 
-from utils import safe_div, safe_exp
+from bdl.ch05.pbp_b4tf.utils import safe_div, safe_exp
 
 
 class PBP(ModelBase):
@@ -270,7 +270,9 @@ class PBP(ModelBase):
     @tf.function
     def _predict(self, x: tf.Tensor):
         m, v = x, tf.zeros_like(x)
-        for l in self.layers:
+        # print(f"before: {m=}, {v=}")
+        for idx, l in enumerate(self.layers):
             m, v = l.predict(m, v)
+            # print(f"{idx=}, {m=}, {v=}")
 
         return m, v

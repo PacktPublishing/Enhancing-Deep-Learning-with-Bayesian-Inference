@@ -3,12 +3,11 @@ import numpy as np
 import pickle
 
 import gzip
-import pbp
+from bdl.ch05.pbp import pbp
 
 
 class PBP_net:
     def __init__(self, X_train, y_train, n_hidden, n_epochs=40, normalize=False):
-
         """
         Constructor for the class implementing a Bayesian neural network
         trained with the probabilistic back propagation method.
@@ -46,7 +45,6 @@ class PBP_net:
         print(f"{X_train.shape}")
         print(f"X_train mean, after normalisation: {X_train.mean()}")
         print(f"X_train std, after normalisation: {X_train.std()}")
-
 
         self.mean_y_train = np.mean(y_train)
         self.std_y_train = np.std(y_train)

@@ -6,9 +6,9 @@ import theano
 
 import theano.tensor as T
 
-import network
+from bdl.ch05.pbp_theano import network
 
-import prior
+from bdl.ch05.pbp_theano import prior
 
 
 class PBP:
@@ -24,8 +24,6 @@ class PBP:
 
         # We create the network
         params = self.prior.get_initial_params()
-        for key, p in params.items():
-            np.save(f"param_{key}.npy", p)
         self.network = network.Network(
             params["m_w"], params["v_w"], params["a"], params["b"]
         )
@@ -126,7 +124,7 @@ class PBP:
         for i in permutation:
 
             old_params = self.network.get_params()
-            logZ = self.adf_update(X[i, :], y[i])
+            logZ = self.adf_update(X[i, :], y[i], self.logZ, self.logZ1, self.logZ2)
             new_params = self.network.get_params()
             self.network.remove_invalid_updates(new_params, old_params)
             self.network.set_params(new_params)

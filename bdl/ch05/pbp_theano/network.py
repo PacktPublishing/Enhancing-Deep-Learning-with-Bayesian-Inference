@@ -4,7 +4,7 @@ import theano
 
 import theano.tensor as T
 
-import network_layer
+from bdl.ch05.pbp_theano import network_layer
 
 
 class Network:
@@ -53,9 +53,10 @@ class Network:
         v = T.zeros_like(m)
 
         # Recursively compute output
-
-        for layer in self.layers:
+        # print(f"before: {m=}, {v=}")
+        for idx, layer in enumerate(self.layers):
             m, v = layer.output_probabilistic(m, v)
+            # print(f"{idx=}, {m=}, {v=}")
 
         return (m[0], v[0])
 

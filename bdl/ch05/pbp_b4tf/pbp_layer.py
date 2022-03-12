@@ -3,8 +3,8 @@ from tensorflow.python.framework import tensor_shape
 
 import tensorflow_probability as tfp
 
-from gamma_initializer import ReciprocalGammaInitializer
-from utils import safe_div, non_negative_constraint
+from bdl.ch05.pbp_b4tf.gamma_initializer import ReciprocalGammaInitializer
+from bdl.ch05.pbp_b4tf.utils import safe_div, non_negative_constraint
 
 
 class PBPLayer(tf.keras.layers.Layer):
@@ -41,10 +41,15 @@ class PBPLayer(tf.keras.layers.Layer):
         self.inv_V1 = tf.math.square(self.inv_sqrtV1)
 
         over_gamma = ReciprocalGammaInitializer(6.0, 6.0)
+
+        # TODO:: Why HeNormal normalization? Not clear that that's done in paper
+        # initializers.ones() gives closer rmse (8.30 vs. 6.65, theano 8.18),
+        # but plot looks much worse.
+        # Theano code seems to
         self.kernel_m = self.add_weight(
             "kernel_mean",
             shape=[last_dim, self.units],
-            initializer=tf.keras.initializers.HeNormal(),
+            initializer=tf.keras.initializers.ones(),
             dtype=self.dtype,
             trainable=True,
         )
@@ -60,7 +65,7 @@ class PBPLayer(tf.keras.layers.Layer):
             shape=[
                 self.units,
             ],
-            initializer=tf.keras.initializers.HeNormal(),
+            initializer=tf.keras.initializers.zeros(),
             dtype=self.dtype,
             trainable=True,
         )
@@ -160,6 +165,8 @@ class PBPLayer(tf.keras.layers.Layer):
         v : tf.Tensor
             Variance. [batch, units]
         """
+        # TODO:: potential difference -- no additional input with mean 1 and variance
+        # added? See Network_layer line 46
         m = (
             tf.tensordot(m_prev, self.kernel_m, axes=[1, 0])
             + tf.expand_dims(self.bias_m, axis=0)
@@ -217,7 +224,9 @@ class PBPReLULayer(PBPLayer):
 
         _sqrt_v = tf.math.sqrt(tf.maximum(va, tf.zeros_like(va)))
         _alpha = safe_div(ma, _sqrt_v)
+
         _inv_alpha = safe_div(tf.constant(1.0, dtype=_alpha.dtype), _alpha)
+
         _cdf_alpha = self.Normal.cdf(_alpha)
         _gamma = tf.where(
             _alpha < -30,
