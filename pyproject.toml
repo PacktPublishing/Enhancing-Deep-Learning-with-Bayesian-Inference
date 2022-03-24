@@ -14,6 +14,7 @@ scikit-learn = "*"
 matplotlib = "*"
 # Added to port PBP code to TF
 Theano = {version = "*", optional = true}
+tensorflow-datasets = "^4.5.2"
 
 
 [tool.poetry.extras]
