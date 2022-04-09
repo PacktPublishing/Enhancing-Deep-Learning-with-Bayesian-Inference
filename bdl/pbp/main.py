@@ -4,58 +4,66 @@ from pathlib import Path
 import numpy as np
 import tensorflow as tf
 import matplotlib.pyplot as plt
+import warnings
+
+warnings.simplefilter(action='ignore', category=FutureWarning)
 from sklearn import datasets
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
-from pbp import PBP
-
+from bdl.pbp.pbp import PBP
+from bdl.pbp.utils import normalize, get_mean_std_x_y, ensure_input
 
 NUM_EPOCHS = 40
-RANDOM_SEED = 3
+RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
 tf.random.set_seed(RANDOM_SEED)
 
 def main():
     print("Get data..")
-    X_train, y_train, X_test, y_test, x_scaler, y_scaler = get_data()
+    X_train, y_train, X_test, y_test = get_data()
 
     print("Fit..")
     model = fit(X_train, y_train, n_epochs=NUM_EPOCHS)
 
     print("Predict..")
-    m, v, rmse = predict(model, X_test, y_test, x_scaler, y_scaler)
+    m, v, rmse = predict(model, X_test, y_test, X_train, y_train)
 
     print("Plot..")
     plot(X_test, y_test, m, v, NUM_EPOCHS, rmse)
 
 
-def get_data(normalise_train: bool = False, normalise_test: bool = False):
+def get_data():
     X, y = datasets.load_boston(return_X_y=True)
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.1, random_state=0
     )
-    x_scaler = StandardScaler()
-    y_scaler = StandardScaler()
-    if normalise_train:
-        X_train = x_scaler.fit_transform(X_train)
-        y_train= y_scaler.fit_transform(y_train.reshape(-1, 1))
-    if normalise_test:
-        X_test = x_scaler.fit_transform(X_test)
-        y_test= y_scaler.fit_transform(y_test.reshape(-1, 1))
-    return X_train, y_train, X_test, y_test, x_scaler, y_scaler
+    return X_train, y_train, X_test, y_test
 
 
 def fit(X_train, y_train, n_epochs: int = 1):
     """Fit model with pbp."""
-    pbp = PBP([50, 50, 1], input_shape=X_train.shape[1])
-    pbp.fit(X_train, y_train, batch_size=1, n_epochs=n_epochs, normalize=True)
+    units = [50, 50, 1]
+    batch_size = 16
+    pbp = PBP(units, input_shape=X_train.shape[1])
+    x, y = normalize(X_train, y_train, units[-1])
+    pbp.fit(x, y, batch_size=1, n_epochs=n_epochs)
     return pbp
 
 
-def predict(pbp, X_test, y_test, x_scaler, y_scaler):
+def predict(pbp, X_test, y_test, X_train, y_train):
+    # normalise test set
+    mean_X_train, mean_y_train, std_X_train, std_y_train = get_mean_std_x_y(X_train, y_train)
+    # We normalize the test set
+    X_test = (X_test - np.full(X_test.shape, mean_X_train)) / np.full(X_test.shape, std_X_train)
+
     # perform inference on normalised data
-    m, v, v_noise = pbp.predict_theanolike(X_test)
+    X_test = ensure_input(X_test, tf.float32, X_test.shape[1])
+    m, v = pbp.predict(X_test)
+    v_noise = (pbp.beta / (pbp.alpha - 1) * std_y_train**2)
+    # add mean and std back to m and v
+    m = m * std_y_train + mean_y_train
+    v = v * std_y_train**2
 
     # transform back to original space
     m = np.squeeze(m.numpy())
@@ -77,7 +85,7 @@ def predict(pbp, X_test, y_test, x_scaler, y_scaler):
         - 0.5 * (y_test - m) ** 2 / (v + v_noise)
     )
     print(f"{test_ll_with_vnoise=}")
-    return m, v, rmse
+    return m, v, rmse, test_ll, test_ll_with_vnoise
 
 
 def plot(X_test, y_test, m, v, num_epochs, rmse):
@@ -93,13 +101,13 @@ def plot(X_test, y_test, m, v, num_epochs, rmse):
         m - np.sqrt(v),
         alpha=0.5,
         label="credible interval",
-    )
+        )
     plt.xlabel("data id")
     plt.ylabel("target: home price")
     plt.ylim([-10, 60])
     plt.title(f"Tensorflow, {num_epochs} epochs, random seed: {RANDOM_SEED}, rmse: {rmse}")
     plt.legend()
-    plt.savefig(Path(__file__).parent / f"pbp_results_tf_{num_epochs:02}_{RANDOM_SEED}.png")
+    # plt.savefig(Path(__file__).parent / f"pbp_results_tf_{num_epochs:02}_{RANDOM_SEED}.png")
 
 
 if __name__ == "__main__":

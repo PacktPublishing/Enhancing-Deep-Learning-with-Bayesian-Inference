@@ -2,7 +2,8 @@
 name = "bayesian-deep-learning"
 version = "0.1.0"
 description = ""
-authors = [""]
+authors = ["Matt Benatan, Marian Schneider, Jochem Gietema"]
+packages = [ {include = "bdl"} ]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.11"
