@@ -1,6 +1,5 @@
 import tensorflow as tf
 from tensorflow.python.framework import tensor_shape
-
 import tensorflow_probability as tfp
 
 from bdl.pbp.gamma_initializer import ReciprocalGammaInitializer

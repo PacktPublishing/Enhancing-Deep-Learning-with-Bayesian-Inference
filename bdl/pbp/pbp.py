@@ -7,13 +7,13 @@ J. M. Hernández-Lobato and R. P. Adams,
 "Probabilistic Backpropagation for Scalable Learning of Bayesian Neural Networks",
 arXiv 1502.05336, 2015
 """
-from typing import Union, List, Tuple
+from typing import Union, List
 import tensorflow as tf
 import tensorflow_probability as tfp
 import numpy as np
 
 from bdl.pbp.math import safe_div
-from bdl.pbp.utils import logZ, build_layers, update_alpha_beta
+from bdl.pbp.utils import logZ, update_alpha_beta
 
 RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
@@ -23,13 +23,12 @@ tf.random.set_seed(RANDOM_SEED)
 class PBP:
     def __init__(
         self,
-        units: List[int],
-        input_shape: Tuple[int] = (1,),
+        layers: List[tf.keras.layers.Layer],
         dtype: Union[tf.dtypes.DType, np.dtype, str] = tf.float32
     ):
         self.alpha = tf.Variable(6.0, trainable=True, dtype=dtype)
         self.beta = tf.Variable(6.0, trainable=True, dtype=dtype)
-        self.layers = build_layers(input_shape, units, dtype)
+        self.layers = layers
         self.Normal = tfp.distributions.Normal(
             loc=tf.constant(0.0, dtype=dtype),
             scale=tf.constant(1.0, dtype=dtype),

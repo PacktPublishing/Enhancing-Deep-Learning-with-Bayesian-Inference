@@ -1,5 +1,4 @@
 import math
-from pathlib import Path
 
 import numpy as np
 import tensorflow as tf
@@ -8,29 +7,15 @@ import warnings
 
 warnings.simplefilter(action='ignore', category=FutureWarning)
 from sklearn import datasets
-from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 
 from bdl.pbp.pbp import PBP
-from bdl.pbp.utils import normalize, get_mean_std_x_y, ensure_input
+from bdl.pbp.utils import normalize, get_mean_std_x_y, ensure_input, build_layers
 
 NUM_EPOCHS = 40
 RANDOM_SEED = 0
 np.random.seed(RANDOM_SEED)
 tf.random.set_seed(RANDOM_SEED)
-
-def main():
-    print("Get data..")
-    X_train, y_train, X_test, y_test = get_data()
-
-    print("Fit..")
-    model = fit(X_train, y_train, n_epochs=NUM_EPOCHS)
-
-    print("Predict..")
-    m, v, rmse = predict(model, X_test, y_test, X_train, y_train)
-
-    print("Plot..")
-    plot(X_test, y_test, m, v, NUM_EPOCHS, rmse)
 
 
 def get_data():
@@ -42,10 +27,9 @@ def get_data():
 
 
 def fit(X_train, y_train, n_epochs: int = 1):
-    """Fit model with pbp."""
     units = [50, 50, 1]
-    batch_size = 16
-    pbp = PBP(units, input_shape=X_train.shape[1])
+    layers = build_layers(X_train.shape[1], units, tf.float32)
+    pbp = PBP(layers)
     x, y = normalize(X_train, y_train, units[-1])
     pbp.fit(x, y, batch_size=1, n_epochs=n_epochs)
     return pbp
@@ -107,8 +91,3 @@ def plot(X_test, y_test, m, v, num_epochs, rmse):
     plt.ylim([-10, 60])
     plt.title(f"Tensorflow, {num_epochs} epochs, random seed: {RANDOM_SEED}, rmse: {rmse}")
     plt.legend()
-    # plt.savefig(Path(__file__).parent / f"pbp_results_tf_{num_epochs:02}_{RANDOM_SEED}.png")
-
-
-if __name__ == "__main__":
-    main()

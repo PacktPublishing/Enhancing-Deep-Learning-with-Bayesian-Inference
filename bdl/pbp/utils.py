@@ -70,15 +70,13 @@ def logZ1_minus_logZ2(diff_square: tf.Tensor, v1: tf.Tensor, v2: tf.Tensor):
     )
 
 
-def build_layers(input_shape, units, dtype):
+def build_layers(last_shape, units, dtype):
     layers = []
-    last_shape = input_shape
     for unit in units[:-1]:
         layer = PBPReLULayer(unit, dtype=dtype)
         layer.build(last_shape)
         layers.append(layer)
         last_shape = unit
-    # Build output Layer's Activation (Linear)
     layer = PBPLayer(units[-1], dtype=dtype)
     layer.build(last_shape)
     layers.append(layer)
