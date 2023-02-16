@@ -6,6 +6,11 @@ authors = [""]
 
 [tool.poetry.dependencies]
 python = "^3.8"
+numpy = "^1.24.2"
+matplotlib = "^3.7.0"
+seaborn = "^0.12.2"
+tensorflow-probability = "^0.19.0"
+scikit-learn = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
@@ -13,6 +18,12 @@ black = {version = "*", allow-prereleases = true}
 isort = "*"
 flake8 = "*"
 taskipy = "*"
+
+[tool.poetry.group.macos-m1]
+optional = true
+
+[tool.poetry.group.macos-m1.dependencies]
+tensorflow-macos = "2.9"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
