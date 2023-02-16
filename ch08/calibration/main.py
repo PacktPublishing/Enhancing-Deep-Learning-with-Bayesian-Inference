@@ -1,15 +1,15 @@
 import numpy as np
 import tensorflow as tf
 
-from base.accuracy import plot_accuracy
-from base.bbb import build_and_compile_model_bbb, get_bbb_predictions
-from base.calibration import plot_calibration
-from base.constants import NUM_LEVELS, NUM_TYPES, NUM_SUBSET, NUM_INFERENCES_BBB, NUM_ENSEMBLE_MEMBERS
-from base.corruption import get_corrupted_images, get_test_subset
-from base.corruption_image import plot_corrupted_images
-from base.ensemble import train_ensemble, get_ensemble_predictions
-from base.model import build_and_compile_model
-from base.scores import Scores
+from ch08.calibration.accuracy import plot_accuracy
+from ch08.calibration.bbb import build_and_compile_model_bbb, get_bbb_predictions
+from ch08.calibration.calibration import plot_calibration
+from ch08.calibration.constants import NUM_LEVELS, NUM_TYPES, NUM_SUBSET, NUM_INFERENCES_BBB, NUM_ENSEMBLE_MEMBERS
+from ch08.calibration.corruption import get_corrupted_images, get_test_subset
+from ch08.calibration.corruption_image import plot_corrupted_images
+from ch08.calibration.ensemble import train_ensemble, get_ensemble_predictions
+from ch08.calibration.model import build_and_compile_model
+from ch08.calibration.scores import Scores
 
 
 def main():

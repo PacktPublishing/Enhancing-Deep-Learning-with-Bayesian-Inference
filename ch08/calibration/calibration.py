@@ -3,8 +3,8 @@ import pandas as pd
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from base.constants import NUM_BINS, NUM_TYPES, NUM_LEVELS
-from base.scores import Scores
+from ch08.calibration.constants import NUM_BINS, NUM_TYPES, NUM_LEVELS
+from ch08.calibration.scores import Scores
 
 
 def expected_calibration_error(

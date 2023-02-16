@@ -4,8 +4,8 @@ import numpy as np
 import tensorflow as tf
 from keras import Model
 
-from base.constants import NUM_ENSEMBLE_MEMBERS
-from base.model import build_and_compile_model
+from ch08.calibration.constants import NUM_ENSEMBLE_MEMBERS
+from ch08.calibration.model import build_and_compile_model
 
 
 def train_ensemble(train_images, train_labels):

@@ -1,6 +1,6 @@
 import numpy as np
 
-from base.constants import NUM_SUBSET, NUM_LEVELS, CORRUPTION_FUNCTIONS
+from ch08.calibration.constants import NUM_SUBSET, NUM_LEVELS, CORRUPTION_FUNCTIONS
 
 
 def get_test_subset(test_images, test_labels):

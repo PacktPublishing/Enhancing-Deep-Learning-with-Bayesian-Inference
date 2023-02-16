@@ -2,8 +2,8 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-from base.constants import CLASS_NAMES, NUM_LEVELS, NUM_TYPES, NUM_SUBSET
-from base.scores import Scores
+from ch08.calibration.constants import CLASS_NAMES, NUM_LEVELS, NUM_TYPES, NUM_SUBSET
+from ch08.calibration.scores import Scores
 
 
 def plot_corrupted_images(corrupted_images: np.ndarray, vanilla: Scores, ensemble: Scores, bbb: Scores):

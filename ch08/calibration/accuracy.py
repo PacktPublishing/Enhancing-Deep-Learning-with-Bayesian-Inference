@@ -3,8 +3,8 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 from sklearn.metrics import accuracy_score
 
-from base.constants import NUM_TYPES, NUM_LEVELS
-from base.scores import Scores
+from ch08.calibration.constants import NUM_TYPES, NUM_LEVELS
+from ch08.calibration.scores import Scores
 
 
 def plot_accuracy(test_labels_subset, vanilla: Scores, ensemble: Scores, bbb: Scores):
