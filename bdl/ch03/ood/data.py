@@ -8,7 +8,8 @@ from sklearn.model_selection import train_test_split
 
 IMG_SIZE = (160, 160)
 AUTOTUNE = tf.data.AUTOTUNE
-DATA_ROOT = Path(__file__).parents[-6] / "data"
+DATA_ROOT = Path(__file__).parents[3] / "data" / "ch03" / "ood"
+MODEL_DIR = Path(__file__).parents[3] / "models" / "ch03" / "ood"
 
 
 def read_data() -> pd.DataFrame:

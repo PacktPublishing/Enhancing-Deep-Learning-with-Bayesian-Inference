@@ -1,7 +1,7 @@
 from pathlib import Path
 from typing import Optional
 
-from bdl.ch03.ood.data import get_train_val_data, get_test_data, preprocess_image, DATA_ROOT, AUTOTUNE
+from bdl.ch03.ood.data import get_train_val_data, get_test_data, preprocess_image, DATA_ROOT, AUTOTUNE, MODEL_DIR
 from bdl.ch03.ood.model import fit_model
 import tensorflow as tf
 import matplotlib.pyplot as plt
@@ -10,11 +10,9 @@ import matplotlib.pyplot as plt
 def main():
     train_dataset, validation_dataset = get_train_val_data()
     model = fit_model(train_dataset, validation_dataset)
-    model.save("ch03_ood")
-
+    model.save(MODEL_DIR)
     accuracy = get_test_accuracy(model)
     print(accuracy)
-    model = tf.keras.models.load_model("ch03_00d")
     output_dir = Path(__file__).parent.parent.parent.parent / "figures" / "ch03" / "ood"
     output_dir.mkdir(parents=True, exist_ok=True)
     single_ood_example(model, output_path=output_dir / "parachute_example.png")
