@@ -2,10 +2,14 @@
 name = "bayesian-deep-learning"
 version = "0.1.0"
 description = ""
-authors = [""]
+authors = ["Jochem Gietema <jochem@giete.ma>"]
+packages = [ {include = "bdl"} ]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.12"
+matplotlib = "*"
+pandas = "*"
+scikit-learn = "*"
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
@@ -13,6 +17,19 @@ black = {version = "*", allow-prereleases = true}
 isort = "*"
 flake8 = "*"
 taskipy = "*"
+
+[tool.poetry.group.tensorflow]
+optional = true
+
+[tool.poetry.group.tensorflow.dependencies]
+tensorflow = "2.9.0"
+
+[tool.poetry.group.tensorflow-m1]
+optional = true
+
+[tool.poetry.group.tensorflow-m1.dependencies]
+tensorflow-macos = "2.9.0"
+tensorflow-metal = "0.5.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
