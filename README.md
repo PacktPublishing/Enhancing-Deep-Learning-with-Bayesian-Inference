@@ -51,7 +51,7 @@ knowledge of working with Python and a machine learning framework such as Tensor
 or PyTorch would also be valuable but is not necessary.
 Python 3.8 or above is recommended, as all code has been tested with Python 3.8. Chapter
 1 provides detailed instructions on setting up your environment for the book’s code
-examples
+examples.
 
 
 
