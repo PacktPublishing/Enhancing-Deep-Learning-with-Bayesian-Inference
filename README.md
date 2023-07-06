@@ -1,7 +1,7 @@
 # Enhancing Deep Learning with Bayesian Inference	
-<a href="https://www.packtpub.com/product/hands-on-exploratory-data-analysis-with-python/9781789537253?utm_source=github&utm_medium=repository&utm_campaign=9781789537253"><img src="https://content.packt.com/B18188/cover_image_small.jpg" alt="EEnhancing Deep Learning with Bayesian Inference" height="256px" align="right"></a>
+<a href="https://www.packtpub.com/product/enhancing-deep-learning-with-bayesian-inference/9781803246888?utm_source=github&utm_medium=repository&utm_campaign=9781803246888"><img src="https://content.packt.com/B18188/cover_image_small.jpg" alt="EEnhancing Deep Learning with Bayesian Inference" height="256px" align="right"></a>
 
-This is the code repository for [Enhancing Deep Learning with Bayesian Inference](https://www.packtpub.com/product/hands-on-exploratory-data-analysis-with-python/9781789537253?utm_source=github&utm_medium=repository&utm_campaign=9781789537253), published by Packt.
+This is the code repository for [Enhancing Deep Learning with Bayesian Inference](https://www.packtpub.com/product/enhancing-deep-learning-with-bayesian-inference/9781803246888?utm_source=github&utm_medium=repository&utm_campaign=9781803246888), published by Packt.
 
 **Create more powerful, robust deep learning systems with Bayesian deep learning in Python**
 
