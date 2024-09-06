@@ -18,39 +18,13 @@ scikit-learn = "^1.5.1"
 wandb = "^0.17.9"
 tensorflow-probability = "^0.24.0"
 
-
-[tool.poetry.dev-dependencies]
-pytest = "*"
-black = {version = "*", allow-prereleases = true}
-isort = "*"
-flake8 = "*"
-taskipy = "*"
-
-
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
-
 
 [tool.poetry.group.adversarial.dependencies]
 cleverhans = "^4.0.0"
 
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.taskipy.tasks]
-test = "poetry run pytest"
-lint = "poetry run black . && poetry run isort . && poetry run flake8 tests"
-
-[tool.black]
-line-length = 88
-include = "\\.pyi?$"
-exclude = """
-/(
-    \\.git
-  | \\.tox
-  | \\.venv
-  | notebooks
-  | reports
-)/
-"""
