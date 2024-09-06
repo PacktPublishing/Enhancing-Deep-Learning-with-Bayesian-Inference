@@ -6,10 +6,17 @@ authors = ["Jochem Gietema <jochem@giete.ma>"]
 packages = [ {include = "bdl"} ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.12"
-matplotlib = "*"
-pandas = "*"
-scikit-learn = "*"
+python = ">=3.9,<3.13"
+tensorflow = "^2.17.0"
+click = "^8.1.7"
+six = "^1.16.0"
+tqdm = "^4.66.5"
+pandas = "^2.2.2"
+keras = "^3.5.0"
+pyarrow = "^17.0.0"
+scikit-learn = "^1.5.1"
+wandb = "^0.17.9"
+
 
 [tool.poetry.dev-dependencies]
 pytest = "*"
@@ -18,18 +25,13 @@ isort = "*"
 flake8 = "*"
 taskipy = "*"
 
-[tool.poetry.group.tensorflow]
-optional = true
 
-[tool.poetry.group.tensorflow.dependencies]
-tensorflow = "2.9.0"
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.6.4"
 
-[tool.poetry.group.tensorflow-m1]
-optional = true
 
-[tool.poetry.group.tensorflow-m1.dependencies]
-tensorflow-macos = "2.9.0"
-tensorflow-metal = "0.5.0"
+[tool.poetry.group.adversarial.dependencies]
+cleverhans = "^4.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
