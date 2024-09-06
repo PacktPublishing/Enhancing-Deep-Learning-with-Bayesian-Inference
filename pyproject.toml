@@ -16,6 +16,7 @@ keras = "^3.5.0"
 pyarrow = "^17.0.0"
 scikit-learn = "^1.5.1"
 wandb = "^0.17.9"
+tensorflow-probability = "^0.24.0"
 
 
 [tool.poetry.dev-dependencies]
