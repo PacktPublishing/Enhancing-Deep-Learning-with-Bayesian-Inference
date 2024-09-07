@@ -2,7 +2,7 @@
 name = "bayesian-deep-learning"
 version = "0.1.0"
 description = ""
-authors = ["Jochem Gietema <jochem@giete.ma>"]
+authors = ["Marian Schneider", "Matt Benatan", "Jochem Gietema"]
 packages = [ {include = "bdl"} ]
 
 [tool.poetry.dependencies]
