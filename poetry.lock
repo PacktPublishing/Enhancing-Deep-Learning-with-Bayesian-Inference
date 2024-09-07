@@ -2479,6 +2479,20 @@ files = [
 tests = ["pytest", "pytest-cov"]
 
 [[package]]
+name = "tf-keras"
+version = "2.17.0"
+description = "Deep learning for humans."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "tf_keras-2.17.0-py3-none-any.whl", hash = "sha256:cc97717e4dc08487f327b0740a984043a9e0123c7a4e21206711669d3ec41c88"},
+    {file = "tf_keras-2.17.0.tar.gz", hash = "sha256:fda97c18da30da0f72a5a7e80f3eee343b09f4c206dad6c57c944fb2cd18560e"},
+]
+
+[package.dependencies]
+tensorflow = ">=2.17,<2.18"
+
+[[package]]
 name = "threadpoolctl"
 version = "3.5.0"
 description = "threadpoolctl"
@@ -2829,4 +2843,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "50ef110928333892323015ca64d8a6d9b8beb5799166ee9e3977f1979a8ba013"
+content-hash = "efa3268d0fee73ee0d2622718521d0a3879cf6495e4410098404ee7ab931cb11"

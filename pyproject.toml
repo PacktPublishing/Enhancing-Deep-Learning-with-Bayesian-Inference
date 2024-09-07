@@ -20,6 +20,7 @@ tensorflow-probability = "^0.24.0"
 ddu-dirty-mnist = "^1.1.1"
 scipy = "^1.14.1"
 seaborn = "^0.13.2"
+tf-keras = "^2.17.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
