@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Dict
 
+import click
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -44,19 +45,31 @@ def get_added_images(acquisition: str, uuid: str, n_iter: int = 5) -> Image:
     return Image.fromarray(np.vstack(imgs))
 
 
-def main():
-    ax = plot("bc1adec5-bc34-44a6-a0eb-fa7cb67854e4", "random")
-    ax = plot("5c8d6001-a5fb-45d3-a7cb-2a8a46b93d18", "knowledge_uncertainty", ax=ax)
+@click.command()
+@click.option("--output-dir", default="output", help="Directory to save the output images")
+@click.option("--uuid1", required=True, help="UUID for the first model")
+@click.option("--uuid2", required=True, help="UUID for the second model")
+@click.option("--acq1", required=True, help="Acquisition type for the first model")
+@click.option("--acq2", required=True, help="Acquisition type for the second model")
+def main(output_dir, uuid1, uuid2, acq1, acq2):
+    ax = plot(uuid1, acq1)
+    ax = plot(uuid2, acq2, ax=ax)
     plt.xticks(np.arange(0, 1050, 50))
     plt.yticks(np.arange(54, 102, 2))
     plt.ylabel("Accuracy")
     plt.xlabel("Number of acquired samples")
     plt.show()
 
-    uuid = "bc1adec5-bc34-44a6-a0eb-fa7cb67854e4"
-    img_random = get_added_images("random", uuid)
-    uuid = "5c8d6001-a5fb-45d3-a7cb-2a8a46b93d18"
-    img_ku = get_added_images("knowledge_uncertainty", uuid)
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+
+    img1 = get_added_images(acq1, uuid1)
+    img2 = get_added_images(acq2, uuid2)
+
+    img1.save(output_path / f"{acq1}_added_images.png")
+    img2.save(output_path / f"{acq2}_added_images.png")
+
+    print(f"Images saved in {output_path}")
 
 
 if __name__ == "__main__":
