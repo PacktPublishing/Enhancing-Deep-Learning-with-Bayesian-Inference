@@ -31,10 +31,11 @@ cleverhans = "^4.0.0"
 
 [tool.ruff]
 line-length = 100
-exclude = ["*.ipynb"]
+
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+ignore = ["E731"]
 
 [tool.taskipy.tasks]
 ruff = { cmd = "ruff format . && ruff check --fix . && ruff format .", help = "Format code and check with ruff."}
