@@ -6,7 +6,7 @@ authors = ["Jochem Gietema <jochem@giete.ma>"]
 packages = [ {include = "bdl"} ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<3.13"
+python = ">=3.10,<3.13"
 tensorflow = "^2.17.0"
 click = "^8.1.7"
 six = "^1.16.0"
@@ -17,6 +17,9 @@ pyarrow = "^17.0.0"
 scikit-learn = "^1.5.1"
 wandb = "^0.17.9"
 tensorflow-probability = "^0.24.0"
+ddu-dirty-mnist = "^1.1.1"
+scipy = "^1.14.1"
+seaborn = "^0.13.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
