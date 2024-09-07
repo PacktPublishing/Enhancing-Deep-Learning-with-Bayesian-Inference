@@ -20,10 +20,21 @@ tensorflow-probability = "^0.24.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.6.4"
+taskipy = "^1.13.0"
 
 [tool.poetry.group.adversarial.dependencies]
 cleverhans = "^4.0.0"
 
+[tool.ruff]
+line-length = 100
+exclude = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.taskipy.tasks]
+ruff = { cmd = "ruff format . && ruff check --fix . && ruff format .", help = "Format code and check with ruff."}
+ruff-check = { cmd = "ruff format --diff . && ruff check .", help = "Check style compliance."}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
