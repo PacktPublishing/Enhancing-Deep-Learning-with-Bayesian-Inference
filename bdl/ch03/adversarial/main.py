@@ -2,11 +2,11 @@ from pathlib import Path
 from typing import Optional
 
 import click
-import tensorflow as tf
 import matplotlib.pyplot as plt
 import numpy as np
+import tensorflow as tf
 
-from bdl.ch03.ood.data import preprocess, MODEL_DIR
+from bdl.ch03.ood.data import MODEL_DIR, preprocess
 
 LOSS = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 DATA_ROOT = Path(__file__).parents[3] / "data" / "ch03" / "adversarial"
@@ -30,25 +30,23 @@ def main(output_path: Optional[str] = None):
     ax[0].title.set_text("Original image")
     ax[0].text(
         0.5,
-        -.1,
-        f"\"Cat\"\n {cat_score:.2%} confidence",
+        -0.1,
+        f'"Cat"\n {cat_score:.2%} confidence',
         size=12,
         ha="center",
-        transform=ax[0].transAxes
+        transform=ax[0].transAxes,
     )
     ax[1].imshow(perturbation)
-    ax[1].title.set_text(
-        "Perturbation added to the image\n(multiplied by epsilon)"
-    )
+    ax[1].title.set_text("Perturbation added to the image\n(multiplied by epsilon)")
     ax[2].imshow(image_perturbed.numpy().astype(int))
     ax[2].title.set_text("Perturbed image")
     ax[2].text(
         0.5,
-        -.1,
-        f"\"Dog\"\n {dog_score:.2%} confidence",
+        -0.1,
+        f'"Dog"\n {dog_score:.2%} confidence',
         size=12,
         ha="center",
-        transform=ax[2].transAxes
+        transform=ax[2].transAxes,
     )
     if output_path:
         plt.savefig(output_path)
@@ -57,22 +55,20 @@ def main(output_path: Optional[str] = None):
 
 
 def get_adversarial_perturbation(image, label, model):
-  image = tf.expand_dims(image, 0)
-  with tf.GradientTape() as tape:
-    tape.watch(image)
-    prediction = model(image)
-    loss = LOSS(label, prediction)
+    image = tf.expand_dims(image, 0)
+    with tf.GradientTape() as tape:
+        tape.watch(image)
+        prediction = model(image)
+        loss = LOSS(label, prediction)
 
-  gradient = tape.gradient(loss, image)
-  return tf.sign(gradient)[0]
+    gradient = tape.gradient(loss, image)
+    return tf.sign(gradient)[0]
 
 
 def get_dog_score(image: np.ndarray, model) -> float:
-  scores = tf.nn.softmax(
-      model.predict(np.expand_dims(image, 0)), axis=1
-  ).numpy()[0]
-  return scores[1]
+    scores = tf.nn.softmax(model.predict(np.expand_dims(image, 0)), axis=1).numpy()[0]
+    return scores[1]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

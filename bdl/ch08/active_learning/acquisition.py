@@ -1,31 +1,24 @@
-from bdl.active_learning.metrics import knowledge_uncertainty
-import numpy as np
-from tqdm import tqdm
 from typing import Callable
+
+import numpy as np
 from tensorflow.keras.models import Model
+from tqdm import tqdm
+
+from bdl.active_learning.metrics import knowledge_uncertainty
 
 
-def get_mc_predictions(
-    model: Model, n_iter: int, x_train: np.ndarray
-) -> np.ndarray:
+def get_mc_predictions(model: Model, n_iter: int, x_train: np.ndarray) -> np.ndarray:
     preds = []
     for _ in tqdm(range(n_iter)):
-        preds_iter = [
-            model(batch, training=True)
-            for batch in np.array_split(x_train, 6)
-        ]
+        preds_iter = [model(batch, training=True) for batch in np.array_split(x_train, 6)]
         preds.append(np.concatenate(preds_iter))
     # format data such that we have n_images, n_predictions, n_classes
     preds = np.moveaxis(np.stack(preds), 0, 1)
     return preds
 
+
 def acquire_knowledge_uncertainty(
-    x_train: np.ndarray,
-    n_samples: int,
-    model: Model,
-    n_iter: int,
-    *args,
-    **kwargs
+    x_train: np.ndarray, n_samples: int, model: Model, n_iter: int, *args, **kwargs
 ):
     preds = get_mc_predictions(model, n_iter, x_train)
     ku = knowledge_uncertainty(preds)

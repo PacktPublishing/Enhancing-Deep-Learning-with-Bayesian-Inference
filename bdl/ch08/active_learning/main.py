@@ -4,15 +4,25 @@ from pathlib import Path
 import click
 import tensorflow as tf
 
-from bdl.active_learning.acquisition import acquisition_factory
-from bdl.active_learning.config import Config
-from bdl.active_learning.data import Data, get_data, get_initial_ds, update_ds
-from bdl.active_learning.metrics import get_accuracy
-from bdl.active_learning.model import build_model, get_callback
-from bdl.active_learning.utils import save_images_and_labels_added, save_results
+from bdl.ch08.active_learning.acquisition import acquisition_factory
+from bdl.ch08.active_learning.config import Config
+from bdl.ch08.active_learning.data import Data, get_data, get_initial_ds, update_ds
+from bdl.ch08.active_learning.metrics import get_accuracy
+from bdl.ch08.active_learning.model import build_model, get_callback
+from bdl.ch08.active_learning.utils import save_images_and_labels_added, save_results
+
 
 @click.command()
-@click.option("--acquisition-type", type=click.Choice(["knowledge_uncertainty", "random",]), default="random")
+@click.option(
+    "--acquisition-type",
+    type=click.Choice(
+        [
+            "knowledge_uncertainty",
+            "random",
+        ]
+    ),
+    default="random",
+)
 @click.option("--n-iter", type=int, default=100)
 @click.option("--n-epochs", type=int, default=50)
 @click.option("--n-samples-per-iter", type=int, default=10)
@@ -30,14 +40,18 @@ def main(
 ):
     if use_wandb:
         import wandb
-        wandb.init(project="active-learning", config={
-            "acquisition_type": acquisition_type,
-            "n_iter": n_iter,
-            "n_epochs": n_epochs,
-            "n_samples_per_iter": n_samples_per_iter,
-            "initial_n_samples": initial_n_samples,
-            "n_total_samples": n_total_samples,
-        })
+
+        wandb.init(
+            project="active-learning",
+            config={
+                "acquisition_type": acquisition_type,
+                "n_iter": n_iter,
+                "n_epochs": n_epochs,
+                "n_samples_per_iter": n_samples_per_iter,
+                "initial_n_samples": initial_n_samples,
+                "n_total_samples": n_total_samples,
+            },
+        )
 
     cfg = Config(
         initial_n_samples=initial_n_samples,
@@ -61,13 +75,13 @@ def main(
         print(f"Iteration: {i} / {cfg.n_total_samples // cfg.n_samples_per_iter}")
         iter_dir = model_dir / str(i)
         model = build_model()
-        
+
         callbacks = [get_callback(iter_dir)]
         if use_wandb:
             wandb_callback = wandb.keras.WandbCallback(save_model=False)
             callbacks.append(wandb_callback)
-        
-        history = model.fit(
+
+        model.fit(
             x=data.x_train_al,
             y=data.y_train_al,
             validation_data=(data.x_test, data.y_test),
@@ -93,16 +107,19 @@ def main(
         save_results(accuracies, added_indices, model_dir)
 
         if use_wandb:
-            wandb.log({
-                "iteration": i,
-                "accuracy": accuracy,
-                "train_size": len(data.x_train_al),
-            })
+            wandb.log(
+                {
+                    "iteration": i,
+                    "accuracy": accuracy,
+                    "train_size": len(data.x_train_al),
+                }
+            )
 
         print(f"Accuracy: {accuracy}")
 
     if use_wandb:
         wandb.finish()
+
 
 if __name__ == "__main__":
     main()

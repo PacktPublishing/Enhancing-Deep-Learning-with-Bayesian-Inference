@@ -6,7 +6,7 @@ from bdl.ch03.ood.data import IMG_SIZE
 def get_model():
     IMG_SHAPE = IMG_SIZE + (3,)
     base_model = tf.keras.applications.ResNet50(
-        input_shape=IMG_SHAPE, include_top=False, weights='imagenet'
+        input_shape=IMG_SHAPE, include_top=False, weights="imagenet"
     )
     base_model.trainable = False
     inputs = tf.keras.Input(shape=IMG_SHAPE)
@@ -23,7 +23,7 @@ def fit_model(train_dataset, validation_dataset) -> tf.keras.Model:
     model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
         loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
-        metrics=['accuracy']
+        metrics=["accuracy"],
     )
     model.fit(train_dataset, epochs=3, validation_data=validation_dataset)
     return model

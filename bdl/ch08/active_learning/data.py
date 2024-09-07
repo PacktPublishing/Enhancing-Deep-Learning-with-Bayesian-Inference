@@ -1,9 +1,9 @@
-
 import dataclasses
-from sklearn.utils import shuffle
 from typing import Optional, Tuple
+
 import numpy as np
 import tensorflow as tf
+from sklearn.utils import shuffle
 
 
 @dataclasses.dataclass
@@ -36,9 +36,7 @@ def get_data() -> Data:
     return Data(x_train, y_train, x_test, y_test)
 
 
-def get_random_balanced_indices(
-    data: Data, initial_n_samples: int
-) -> np.ndarray:
+def get_random_balanced_indices(data: Data, initial_n_samples: int) -> np.ndarray:
     labels = np.argmax(data.y_train, axis=1)
     indices = []
     label_list = np.unique(labels)
@@ -46,7 +44,7 @@ def get_random_balanced_indices(
         indices_label = np.random.choice(
             np.argwhere(labels == label).flatten(),
             size=initial_n_samples // len(label_list),
-            replace=False
+            replace=False,
         )
         indices.extend(indices_label)
     indices = np.array(indices)
@@ -59,9 +57,7 @@ def get_initial_ds(data: Data, initial_n_samples: int) -> Data:
     x_train_al, y_train_al = data.x_train[indices], data.y_train[indices]
     x_train = np.delete(data.x_train, indices, axis=0)
     y_train = np.delete(data.y_train, indices, axis=0)
-    return Data(
-        x_train, y_train, data.x_test, data.y_test, x_train_al, y_train_al
-    )
+    return Data(x_train, y_train, data.x_test, data.y_test, x_train_al, y_train_al)
 
 
 def update_ds(data: Data, indices_to_add: np.ndarray) -> Tuple[Data, Tuple[np.ndarray, np.ndarray]]:
@@ -72,6 +68,7 @@ def update_ds(data: Data, indices_to_add: np.ndarray) -> Tuple[Data, Tuple[np.nd
     y_train = np.delete(data.y_train, indices_to_add, axis=0)
     # shuffle set to train on
     x_train_al, y_train_al = shuffle(x_train_al, y_train_al, random_state=0)
-    return Data(
-        x_train, y_train, data.x_test, data.y_test, x_train_al, y_train_al
-    ), (x_added, y_added)
+    return Data(x_train, y_train, data.x_test, data.y_test, x_train_al, y_train_al), (
+        x_added,
+        y_added,
+    )
