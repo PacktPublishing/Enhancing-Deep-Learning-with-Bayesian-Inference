@@ -7,6 +7,6 @@ data/cat.png
 ```
 
 ```commandline
-poetry run python bdl/ch03/adversarial/main.py \
+poetry run python ch03/adversarial/main.py \
 --model-path model.keras
 ```

@@ -11,7 +11,7 @@ tar -xzf data/pets.tgz -C data
 Then run
 
 ```commandline
-poetry run python bdl/ch08/adversarial/main.py
+poetry run python ch08/adversarial/main.py
 ```
 
 to train a neural network model for image classification, perform

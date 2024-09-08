@@ -11,7 +11,7 @@ tar -xzf data/pets.tgz -C data
 Then train a model:
 
 ```commandline
-poetry run python bdl/ch03/ood/train.py
+poetry run python ch03/ood/train.py
 ```
 
 Download the OOD data:
