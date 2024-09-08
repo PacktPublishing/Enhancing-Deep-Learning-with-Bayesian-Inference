@@ -17,7 +17,9 @@ DATA_ROOT = Path(__file__).parents[3] / "data" / "ch03" / "adversarial"
 @click.option("--output-path", type=click.STRING, required=False, default=None)
 def main(model_path: str, output_path: Optional[str] = None):
     model = tf.keras.models.load_model(model_path)
-    image, label = preprocess(str(Path(__file__).parent.parent.parent.parent / "data" / "cat.png"), 0)
+    image, label = preprocess(
+        str(Path(__file__).parent.parent.parent.parent / "data" / "cat.png"), 0
+    )
     label = tf.expand_dims(label, 0)
     epsilon = 0.5
     perturbation = get_adversarial_perturbation(image, label, model)
