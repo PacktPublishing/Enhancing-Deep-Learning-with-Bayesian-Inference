@@ -6,19 +6,20 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
-from bdl.ch03.ood.data import MODEL_DIR, preprocess
+from bdl.ch03.ood.data import preprocess
 
 LOSS = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 DATA_ROOT = Path(__file__).parents[3] / "data" / "ch03" / "adversarial"
 
 
 @click.command()
+@click.option("--model-path", type=click.STRING, required=True)
 @click.option("--output-path", type=click.STRING, required=False, default=None)
-def main(output_path: Optional[str] = None):
-    model = tf.keras.models.load_model(MODEL_DIR)
-    image, label = preprocess(str(DATA_ROOT / "cat.png"), 0)
+def main(model_path: str, output_path: Optional[str] = None):
+    model = tf.keras.models.load_model(model_path)
+    image, label = preprocess(str(Path(__file__).parent.parent.parent.parent / "data" / "cat.png"), 0)
     label = tf.expand_dims(label, 0)
-    epsilon = 0.1
+    epsilon = 0.5
     perturbation = get_adversarial_perturbation(image, label, model)
     image_perturbed = image + epsilon * perturbation
     cat_score = 1 - get_dog_score(image, model)
