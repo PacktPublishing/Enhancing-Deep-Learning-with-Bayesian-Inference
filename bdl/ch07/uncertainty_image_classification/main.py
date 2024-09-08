@@ -1,11 +1,13 @@
 from typing import Callable
 
+import click
 import ddu_dirty_mnist
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 import tf_keras
 from sklearn.metrics import roc_auc_score
+from tqdm import tqdm
 
 from bdl.ch07.uncertainty_image_classification.data import get_data
 from bdl.ch07.uncertainty_image_classification.model import get_model
@@ -45,11 +47,11 @@ def plot(preds_id, preds_ood, preds_amb):
     plt.show()
 
 
-def get_preds(model, test_imgs, ood_imgs, amb_imgs):
+def get_preds(model, test_imgs, ood_imgs, amb_imgs, nb_iter: int = 50):
     preds_id = []
     preds_ood = []
     preds_amb = []
-    for _ in range(50):
+    for _ in tqdm(range(nb_iter)):
         preds_id.append(model(test_imgs))
         preds_ood.append(model(ood_imgs))
         preds_amb.append(model(amb_imgs))
@@ -60,7 +62,10 @@ def get_preds(model, test_imgs, ood_imgs, amb_imgs):
     return preds_id, preds_ood, preds_amb
 
 
-def main():
+@click.command()
+@click.option("--nb-epochs", type=click.INT, required=False, default=50)
+@click.option("--nb-mc-iter", type=click.INT, required=False, default=50)
+def main(nb_epochs: int = 50, nb_mc_iter: int = 50):
     train_imgs, train_labels, test_imgs, test_labels = get_data()
     model = get_model()
 
@@ -70,7 +75,10 @@ def main():
         metrics=["accuracy"],
         experimental_run_tf_function=False,
     )
-    model.fit(x=train_imgs, y=train_labels, validation_data=(test_imgs, test_labels), epochs=50)
+    model.fit(
+        x=train_imgs, y=train_labels, validation_data=(test_imgs, test_labels), epochs=nb_epochs
+    )
+    model.save("model_mnist.keras")
 
     (_, _), (ood_imgs, _) = tf.keras.datasets.fashion_mnist.load_data()
     ood_imgs = np.expand_dims(ood_imgs / 255.0, -1)
@@ -80,20 +88,22 @@ def main():
     )
     amb_imgs = ambiguous_mnist_test.data.numpy().reshape(60000, 28, 28, 1)[:10000]
 
-    preds_id, preds_ood, preds_amb = get_preds(model, test_imgs, ood_imgs, amb_imgs)
+    preds_id, preds_ood, preds_amb = get_preds(
+        model, test_imgs, ood_imgs, amb_imgs, nb_iter=nb_mc_iter
+    )
     plot(preds_id, preds_ood, preds_amb)
 
-    print(f"{auc_id_and_amb_vs_ood(total_uncertainty)=:.2%}")
-    print(f"{auc_id_and_amb_vs_ood(knowledge_uncertainty)=:.2%}")
-    print(f"{auc_id_and_amb_vs_ood(data_uncertainty)=:.2%}")
+    print(f"{auc_id_and_amb_vs_ood(total_uncertainty, preds_id, preds_ood, preds_amb)=:.2%}")
+    print(f"{auc_id_and_amb_vs_ood(knowledge_uncertainty, preds_id, preds_ood, preds_amb)=:.2%}")
+    print(f"{auc_id_and_amb_vs_ood(data_uncertainty, preds_id, preds_ood, preds_amb)=:.2%}")
     # output:
     # auc_id_and_amb_vs_ood(total_uncertainty)=91.81%
     # auc_id_and_amb_vs_ood(knowledge_uncertainty)=98.87%
     # auc_id_and_amb_vs_ood(data_uncertainty)=84.29%
 
-    print(f"{auc_id_vs_amb(total_uncertainty)=:.2%}")
-    print(f"{auc_id_vs_amb(knowledge_uncertainty)=:.2%}")
-    print(f"{auc_id_vs_amb(data_uncertainty)=:.2%}")
+    print(f"{auc_id_vs_amb(total_uncertainty, preds_id, preds_amb)=:.2%}")
+    print(f"{auc_id_vs_amb(knowledge_uncertainty, preds_id, preds_amb)=:.2%}")
+    print(f"{auc_id_vs_amb(data_uncertainty, preds_id, preds_amb)=:.2%}")
     # output:
     # auc_id_vs_amb(total_uncertainty)=94.71%
     # auc_id_vs_amb(knowledge_uncertainty)=87.06%
