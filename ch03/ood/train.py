@@ -16,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 import tensorflow as tf
 
-from bdl.ch03.ood.data import IMG_SIZE, create_dataset, load_and_preprocess_data
+from ch03.ood.data import IMG_SIZE, create_dataset, load_and_preprocess_data
 
 
 def get_model() -> tf.keras.Model:
