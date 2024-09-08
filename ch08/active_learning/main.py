@@ -4,12 +4,12 @@ from pathlib import Path
 import click
 import tensorflow as tf
 
-from bdl.ch08.active_learning.acquisition import acquisition_factory
-from bdl.ch08.active_learning.config import Config
-from bdl.ch08.active_learning.data import Data, get_data, get_initial_ds, update_ds
-from bdl.ch08.active_learning.metrics import get_accuracy
-from bdl.ch08.active_learning.model import build_model, get_callback
-from bdl.ch08.active_learning.utils import save_images_and_labels_added, save_results
+from ch08.active_learning.acquisition import acquisition_factory
+from ch08.active_learning.config import Config
+from ch08.active_learning.data import Data, get_data, get_initial_ds, update_ds
+from ch08.active_learning.metrics import get_accuracy
+from ch08.active_learning.model import build_model, get_callback
+from ch08.active_learning.utils import save_images_and_labels_added, save_results
 
 
 @click.command()

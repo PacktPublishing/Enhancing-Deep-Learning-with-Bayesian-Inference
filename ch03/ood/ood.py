@@ -4,7 +4,7 @@ import click
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-from bdl.ch03.ood.data import AUTOTUNE, preprocess_image
+from ch03.ood.data import AUTOTUNE, preprocess_image
 
 
 def display_image(image_path):

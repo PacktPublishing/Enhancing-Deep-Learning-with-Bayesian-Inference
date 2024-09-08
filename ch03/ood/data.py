@@ -18,7 +18,7 @@ def load_and_preprocess_data(
     df = pd.read_csv(file_path, sep=" ")
     df.columns = ["path", "species", "breed", "ID"]
     df["breed"] = df.breed.apply(lambda x: x - 1)
-    data_dir = Path(__file__).parent.parent.parent.parent / "data" / "oxford-iiit-pet" / "images"
+    data_dir = Path(__file__).parent.parent.parent / "data" / "oxford-iiit-pet" / "images"
     df["path"] = df["path"].apply(lambda x: str(data_dir / f"{x}.jpg"))
     if not is_test:
         return train_test_split(df["path"], df["breed"], test_size=0.2, random_state=0)

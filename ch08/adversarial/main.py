@@ -26,8 +26,8 @@ from cleverhans.tf2.attacks.fast_gradient_method import (
 from keras.metrics import CategoricalAccuracy
 from tqdm import tqdm
 
-from bdl.ch08.adversarial.data import get_test_dataset, get_train_val_datasets
-from bdl.ch08.adversarial.model import get_model
+from ch08.adversarial.data import get_test_dataset, get_train_val_datasets
+from ch08.adversarial.model import get_model
 
 
 def mc_dropout(model, images, n_inference: int = 50):

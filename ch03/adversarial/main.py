@@ -6,10 +6,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
-from bdl.ch03.ood.data import preprocess
+from ch03.ood.data import preprocess
 
 LOSS = tf.keras.losses.BinaryCrossentropy(from_logits=True)
-DATA_ROOT = Path(__file__).parents[3] / "data" / "ch03" / "adversarial"
 
 
 @click.command()
@@ -18,7 +17,7 @@ DATA_ROOT = Path(__file__).parents[3] / "data" / "ch03" / "adversarial"
 def main(model_path: str, output_path: Optional[str] = None):
     model = tf.keras.models.load_model(model_path)
     image, label = preprocess(
-        str(Path(__file__).parent.parent.parent.parent / "data" / "cat.png"), 0
+        str(Path(__file__).parent.parent.parent / "data" / "cat.png"), 0
     )
     label = tf.expand_dims(label, 0)
     epsilon = 0.5

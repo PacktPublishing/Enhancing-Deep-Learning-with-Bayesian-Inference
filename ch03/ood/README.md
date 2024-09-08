@@ -25,5 +25,5 @@ tar -xzf data/imagenette.tgz -C data
 Then, use the model path to test the model on out-of-distribution images
 
 ```commandline
-poetry run python bdl/ch03/ood/ood.py --model-path model.keras
+poetry run python ch03/ood/ood.py --model-path model.keras
 ```

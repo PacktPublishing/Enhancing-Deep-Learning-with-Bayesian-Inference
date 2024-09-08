@@ -9,9 +9,9 @@ import tf_keras
 from sklearn.metrics import roc_auc_score
 from tqdm import tqdm
 
-from bdl.ch07.uncertainty_image_classification.data import get_data
-from bdl.ch07.uncertainty_image_classification.model import get_model
-from bdl.ch07.uncertainty_image_classification.uncertainty import (
+from ch07.uncertainty_image_classification.data import get_data
+from ch07.uncertainty_image_classification.model import get_model
+from ch07.uncertainty_image_classification.uncertainty import (
     data_uncertainty,
     knowledge_uncertainty,
     total_uncertainty,
