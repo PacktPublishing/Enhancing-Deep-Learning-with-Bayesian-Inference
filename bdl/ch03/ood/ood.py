@@ -3,6 +3,7 @@ from pathlib import Path
 import click
 import matplotlib.pyplot as plt
 import tensorflow as tf
+
 from bdl.ch03.ood.data import AUTOTUNE, preprocess_image
 
 
