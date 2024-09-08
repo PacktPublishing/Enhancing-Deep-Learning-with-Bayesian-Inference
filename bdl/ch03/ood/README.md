@@ -11,7 +11,7 @@ tar -xzf data/pets.tgz -C data
 Then train a model:
 
 ```commandline
-poetry run python bdl/ch02/ood/train.py
+poetry run python bdl/ch03/ood/train.py
 ```
 
 Download the OOD data:
@@ -25,5 +25,5 @@ tar -xzf data/imagenette.tgz -C data
 Then, use the model path to test the model on out-of-distribution images
 
 ```commandline
-poetry run python bdl/ch02/ood/ood.py --model-path model.keras
+poetry run python bdl/ch03/ood/ood.py --model-path model.keras
 ```
