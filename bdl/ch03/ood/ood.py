@@ -3,7 +3,7 @@ from pathlib import Path
 import click
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from ch02.ood.data import AUTOTUNE, preprocess_image
+from bdl.ch03.ood.data import AUTOTUNE, preprocess_image
 
 
 def display_image(image_path):
@@ -43,14 +43,14 @@ def plot_dog_score_histogram(dog_scores):
 @click.command()
 @click.option("--model-path", type=click.STRING, required=True)
 def main(model_path: str):
-    # Load the model (assuming it's defined elsewhere)
+    # Load the binary cat vs dog model (assuming it's defined elsewhere)
     model = tf.keras.models.load_model(model_path)
 
     # Display and classify single image
     data_dir = Path(__file__).parent.parent.parent.parent / "data" / "imagenette-160"
     image_path = data_dir / "val" / "n03888257" / "ILSVRC2012_val_00018229.JPEG"
-    display_image(image_path)
-    image = preprocess_image(image_path)
+    display_image(str(image_path))
+    image = preprocess_image(str(image_path))
     predict_dog_score(model, image)
 
     # Process parachute dataset
@@ -61,7 +61,7 @@ def main(model_path: str):
     predictions = model.predict(parachute_dataset)
     dog_scores = tf.nn.softmax(predictions, axis=1)[:, 1]
 
-    # Plot histogram of dog scores
+    # Plot histogram of dog scores of parachute dataset
     plot_dog_score_histogram(dog_scores)
 
 

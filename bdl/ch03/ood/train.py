@@ -11,10 +11,12 @@ The main() function orchestrates the entire process, from data loading to final
 accuracy reporting.
 """
 
+from pathlib import Path
+
 import pandas as pd
 import tensorflow as tf
 
-from bdl.ch02.ood.data import IMG_SIZE, create_dataset, load_and_preprocess_data
+from bdl.ch03.ood.data import IMG_SIZE, create_dataset, load_and_preprocess_data
 
 
 def get_model() -> tf.keras.Model:
@@ -84,20 +86,23 @@ def calculate_accuracy(df_test: pd.DataFrame, predicted_labels: tf.Tensor) -> fl
 
 def main() -> None:
     """
-    Main function to orchestrate the model training and evaluation process.
+    Main function to orchestrate the binary cat vs dog model training and evaluation process.
 
     This function loads the data, creates and trains the model, evaluates it on the test set,
     and prints the final accuracy.
     """
+    annotation_dir = (
+        Path(__file__).parent.parent.parent.parent / "data" / "oxford-iiit-pet" / "annotations"
+    )
     paths_train, paths_val, labels_train, labels_val = load_and_preprocess_data(
-        "oxford-iiit-pet/annotations/trainval.txt"
+        annotation_dir / "trainval.txt"
     )
 
     train_dataset = create_dataset(paths_train, labels_train)
     validation_dataset = create_dataset(paths_val, labels_val)
 
     model = get_model()
-    model = model.compile(
+    model.compile(
         optimizer=tf.keras.optimizers.Adam(learning_rate=0.01),
         loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
         metrics=["accuracy"],
@@ -106,7 +111,7 @@ def main() -> None:
 
     model.save("model.keras")
 
-    df_test = load_and_preprocess_data("oxford-iiit-pet/annotations/test.txt", is_test=True)
+    df_test = load_and_preprocess_data(annotation_dir / "test.txt", is_test=True)
     test_dataset = create_dataset(df_test["path"], df_test["breed"])
 
     predicted_labels = evaluate_model(model, test_dataset)
