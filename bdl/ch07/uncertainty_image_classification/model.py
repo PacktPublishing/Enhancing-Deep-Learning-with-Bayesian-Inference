@@ -1,5 +1,6 @@
 import tensorflow as tf
 import tensorflow_probability as tfp
+import tf_keras
 
 tfd = tfp.distributions
 
@@ -18,17 +19,17 @@ def block(filters: int, max_pool: bool = True):
     )
     if not max_pool:
         return (conv_layer,)
-    max_pool = tf.keras.layers.MaxPooling2D(pool_size=[2, 2], strides=[2, 2], padding="same")
+    max_pool = tf_keras.layers.MaxPooling2D(pool_size=[2, 2], strides=[2, 2], padding="same")
     return conv_layer, max_pool
 
 
 def get_model():
-    model = tf.keras.models.Sequential(
+    model = tf_keras.models.Sequential(
         [
             *block(5),
             *block(16),
             *block(120, max_pool=False),
-            tf.keras.layers.Flatten(),
+            tf_keras.layers.Flatten(),
             tfp.layers.DenseFlipout(
                 84,
                 kernel_divergence_fn=kl_divergence_function,

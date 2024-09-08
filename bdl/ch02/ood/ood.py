@@ -3,7 +3,7 @@ from pathlib import Path
 import click
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from ch02.train import AUTOTUNE, preprocess_image
+from ch02.ood.data import AUTOTUNE, preprocess_image
 
 
 def display_image(image_path):
@@ -47,13 +47,14 @@ def main(model_path: str):
     model = tf.keras.models.load_model(model_path)
 
     # Display and classify single image
-    image_path = "imagenette-160/val/n03888257/ILSVRC2012_val_00018229.JPEG"
+    data_dir = Path(__file__).parent.parent.parent.parent / "data" / "imagenette-160"
+    image_path = data_dir / "val" / "n03888257" / "ILSVRC2012_val_00018229.JPEG"
     display_image(image_path)
     image = preprocess_image(image_path)
     predict_dog_score(model, image)
 
     # Process parachute dataset
-    parachute_image_dir = "imagenette-160/train/n03888257"
+    parachute_image_dir = data_dir / "train" / "n03888257"
     parachute_dataset = create_parachute_dataset(parachute_image_dir)
 
     # Get predictions for parachute dataset

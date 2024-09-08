@@ -10,7 +10,7 @@ tar -xzf data/pets.tgz -C data
 
 Then run
 
-```python
+```commandline
 poetry run python bdl/ch08/adversarial/main.py
 ```
 

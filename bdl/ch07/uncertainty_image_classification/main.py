@@ -4,6 +4,7 @@ import ddu_dirty_mnist
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
+import tf_keras
 from sklearn.metrics import roc_auc_score
 
 from bdl.ch07.uncertainty_image_classification.data import get_data
@@ -64,7 +65,7 @@ def main():
     model = get_model()
 
     model.compile(
-        tf.keras.optimizers.Adam(),
+        tf_keras.optimizers.Adam(),
         loss="categorical_crossentropy",
         metrics=["accuracy"],
         experimental_run_tf_function=False,
