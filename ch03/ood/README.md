@@ -4,7 +4,7 @@ Download the in-distribution data (cat vs dog):
 
 ```commandline
 mkdir -p data
-curl -X GET https://s3.amazonaws.com/fast-ai-imageclas/oxford-iiit-pet.tgz data/pets.tgz
+curl -X GET https://s3.amazonaws.com/fast-ai-imageclas/oxford-iiit-pet.tgz --output data/pets.tgz
 tar -xzf data/pets.tgz -C data
 ```
 

@@ -4,7 +4,7 @@ import click
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
-from ch03.ood.data import AUTOTUNE, preprocess_image
+from data import AUTOTUNE, preprocess_image
 
 
 def display_image(image_path):
@@ -48,7 +48,7 @@ def main(model_path: str):
     model = tf.keras.models.load_model(model_path)
 
     # Display and classify single image
-    data_dir = Path(__file__).parent.parent.parent.parent / "data" / "imagenette-160"
+    data_dir = Path(__file__).parent.parent.parent / "data" / "imagenette-160"
     image_path = data_dir / "val" / "n03888257" / "ILSVRC2012_val_00018229.JPEG"
     display_image(str(image_path))
     image = preprocess_image(str(image_path))

@@ -16,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 import tensorflow as tf
 
-from ch03.ood.data import IMG_SIZE, create_dataset, load_and_preprocess_data
+from data import IMG_SIZE, create_dataset, load_and_preprocess_data
 
 
 def get_model() -> tf.keras.Model:
@@ -92,7 +92,7 @@ def main() -> None:
     and prints the final accuracy.
     """
     annotation_dir = (
-        Path(__file__).parent.parent.parent.parent / "data" / "oxford-iiit-pet" / "annotations"
+        Path(__file__).parent.parent.parent / "data" / "oxford-iiit-pet" / "annotations"
     )
     paths_train, paths_val, labels_train, labels_val = load_and_preprocess_data(
         annotation_dir / "trainval.txt"
