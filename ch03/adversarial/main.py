@@ -1,15 +1,26 @@
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Tuple
 
 import click
 import matplotlib.pyplot as plt
 import numpy as np
 import tensorflow as tf
 
-from ch03.ood.data import preprocess
 
+IMG_SIZE = (160, 160)
 LOSS = tf.keras.losses.BinaryCrossentropy(from_logits=True)
 
+
+@tf.function
+def preprocess_image(filename: tf.Tensor) -> tf.Tensor:
+    raw = tf.io.read_file(filename)
+    image = tf.image.decode_png(raw, channels=3)
+    return tf.image.resize(image, IMG_SIZE)
+
+
+@tf.function
+def preprocess(filename: tf.Tensor, label: tf.Tensor) -> Tuple[tf.Tensor, tf.Tensor]:
+    return preprocess_image(filename), tf.one_hot(label, 2)
 
 @click.command()
 @click.option("--model-path", type=click.STRING, required=True)
