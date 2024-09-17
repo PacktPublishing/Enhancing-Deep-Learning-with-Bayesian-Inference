@@ -4,7 +4,7 @@ import numpy as np
 from tensorflow.keras.models import Model
 from tqdm import tqdm
 
-from ch08.active_learning.metrics import knowledge_uncertainty
+from metrics import knowledge_uncertainty
 
 
 def get_mc_predictions(model: Model, n_iter: int, x_train: np.ndarray) -> np.ndarray:
