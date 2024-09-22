@@ -26,7 +26,7 @@ poetry run python ch08/active_learning/plot.py \
 --uuid2 {uuid_2} --acq2 knowledge_uncertainty
 ```
 
-To plot the accuracy difference between the two methods.
+To plot the accuracy difference between the two methods. Replace {uuid_1} and {uuid_2} with the UUIDs of the uuids of the directories created by the previous steps.
 
 You should see that selecting data via knowledge uncertainty gives better performance with fewer samples, and a higher final accuracy.
 In addition, you can inspect the images that were selected by both methods, and should see that the
