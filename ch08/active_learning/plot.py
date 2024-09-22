@@ -14,7 +14,7 @@ sns.set_context("paper")
 
 def plot(uuid: str, acquisition: str, ax=None):
     acq_name = acquisition.replace("_", " ")
-    df = pd.read_parquet(f"./models/{acquisition}/{uuid}/results.parquet")[:-1]
+    df = pd.read_csv(f"./models/{acquisition}/{uuid}/results.csv")[:-1]
     df = df.rename(columns={"accuracy": acq_name})
     df["n_samples"] = df["i"].apply(lambda x: x * 10 + 20)
     return df.plot.line(x="n_samples", y=acq_name, style=".-", figsize=(8, 5), ax=ax)
@@ -23,7 +23,7 @@ def plot(uuid: str, acquisition: str, ax=None):
 def get_imgs_per_label(model_dirs) -> Dict[int, np.ndarray]:
     imgs_per_label = {i: [] for i in range(10)}
     for model_dir in model_dirs:
-        df = pd.read_parquet(model_dir / "images_added.parquet")
+        df = pd.read_parquet(model_dir / "added.parquet")
         df.image = df.image.apply(lambda x: x.reshape(28, 28).astype(np.uint8))
         for label in df.label.unique():
             dff = df[df.label == label]
