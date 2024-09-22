@@ -1,41 +1,34 @@
-
 ### [Packt Conference : Put Generative AI to work on Oct 11-13 (Virtual)](https://packt.link/JGIEY)
 
-<b><p align='center'>[![Packt Conference](https://hub.packtpub.com/wp-content/uploads/2023/08/put-generative-ai-to-work-packt.png)](https://packt.link/JGIEY)</p></b> 
-3 Days, 20+ AI Experts, 25+ Workshops and Power Talks 
+<b><p align='center'>[![Packt Conference](https://hub.packtpub.com/wp-content/uploads/2023/08/put-generative-ai-to-work-packt.png)](https://packt.link/JGIEY)</p></b>
+3 Days, 20+ AI Experts, 25+ Workshops and Power Talks
 
 Code: <b>USD75OFF</b>
 
-# Enhancing Deep Learning with Bayesian Inference	
-<a href="https://www.packtpub.com/product/enhancing-deep-learning-with-bayesian-inference/9781803246888?utm_source=github&utm_medium=repository&utm_campaign=9781803246888"><img src="https://content.packt.com/B18188/cover_image_small.jpg" alt="EEnhancing Deep Learning with Bayesian Inference" height="256px" align="right"></a>
+# Enhancing Deep Learning with Bayesian Inference
+
+<a href="https://www.packtpub.com/product/enhancing-deep-learning-with-bayesian-inference/9781803246888?utm_source=github&utm_medium=repository&utm_campaign=9781803246888"><img src="https://content.packt.com/B18188/cover_image_small.jpg" alt="EEnhancing Deep Learning with Bayesian Inference" height="256px"></a>
 
 This is the code repository for [Enhancing Deep Learning with Bayesian Inference](https://www.packtpub.com/product/enhancing-deep-learning-with-bayesian-inference/9781803246888?utm_source=github&utm_medium=repository&utm_campaign=9781803246888), published by Packt.
 
-**Create more powerful, robust deep learning systems with Bayesian deep learning in Python**
+## Code examples included in the book
 
-## What is this book about?
-Deep learning is revolutionizing our lives, impacting content recommendations and playing a key role in mission- and safety-critical applications. Yet, typical deep learning methods lack awareness about uncertainty. Bayesian deep learning offers solutions based on approximate Bayesian inference, enhancing the robustness of deep learning systems by indicating how confident they are in their predictions. This book will guide you in incorporating model predictions within your applications with care.
-
-This book covers the following exciting features: 
-* Discern the advantages and disadvantages of Bayesian inference and deep learning
-* Become well-versed with the fundamentals of Bayesian Neural Networks
-* Understand the differences between key BNN implementations and approximations
-* Recognize the merits of probabilistic DNNs in production contexts
-* Master the implementation of a variety of BDL methods in Python code
-* Apply BDL methods to real-world problems
-* Evaluate BDL methods and choose the most suitable approach for a given task
-* Develop proficiency in dealing with unexpected data in deep learning applications
-
-If you feel this book is for you, get your [copy](https://www.amazon.com/dp/B0BTTB8NHJ) today!
-
-<a href="https://www.packtpub.com/?utm_source=github&utm_medium=banner&utm_campaign=GitHubBanner"><img src="https://raw.githubusercontent.com/PacktPublishing/GitHub/master/GitHub.png" 
-alt="https://www.packtpub.com/" border="5" /></a>
-
+| Chapter | Title                                                 | Content                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2       | Fundamentals of Bayesian Inference                    | [Sampling](ch02/sampling.py)                                                                                                                                                                                                                                                                                                                                                              |
+| 3       | Fundamentals of Deep Learning                         | - [Problem 1: Predictions on out-of-distribution data](ch03/ood/README.md)<br>- [Problem 2: Vulnerability to adversarial attacks](ch03/adversarial/README.md)                                                                                                                                                                                                                             |
+| 4       | Introducing Bayesian Deep Learning                    | - [Distributions](ch04/distributions.py)                                                                                                                                                                                                                                                                                                                                                    |
+| 5       | Principled Approaches for Bayesian Deep Learning      | - [Bayes by backprop](ch05/bbb/bbb_example.ipynb)<br>- Probabilistic Backpropagation                                                                                                                                                                                                                                                                                                      |
+| 6       | Using the Standard Toolbox for Bayesian Deep Learning | - [Using Dropout for approximate Bayesian inference](ch06/mc_dropout.ipynb)<br>- [Using ensembles for model uncertainty estimates](ch06/ensemble.ipynb)<br>- [Last layer methods for Bayesian inference](ch06/last_layer_methods.ipynb)                                                                                                                                                   |
+| 7       | Practical Considerations for Bayesian Deep Learning   | - [Sources of uncertainty: image classification case study](ch07/uncertainty_image_classification/README.md)<br>- Sources of uncertainty: regression case study                                                                                                                                                                                                                           |
+| 8       | Applying Bayesian Deep Learning                       | - [Detecting out-of-distribution data](ch08/ood/main.py)<br>- [Being robust against dataset shift](ch08/data_set_shift.ipynb)<br>- [Using data selection via uncertainty to keep models fresh (active learning)](ch08/active_learning/main.py)<br>- Using uncertainty estimates for smarter reinforcement learning<br>- [Susceptibility to adversarial input](ch08/adversarial/README.md) |
 
 ## Instructions and Navigations
+
 All of the code is organized into folders.
 
 The code will look like the following:
+
 ```
 {const set = function(...items) {
     this.arr = [...items];
@@ -44,12 +37,10 @@ The code will look like the following:
             return false; (SC-Source)}
 ```
 
-
 **Following is what you need for this book:**
 This book provides a comprehensive introduction to Bayesian deep learning methods for machine learning researchers and practitioners. It discusses the importance of uncertainty in machine learning, covers numerous methods for uncertainty-aware deep networks, and provides detailed code examples in Python to assist you throughout your exploration.
 
 With the following software and hardware list you can run all code files present in the book (Chapters 1-9).
-
 
 ### Software and Hardware List
 
@@ -61,17 +52,16 @@ Python 3.8 or above is recommended, as all code has been tested with Python 3.8.
 1 provides detailed instructions on setting up your environment for the book’s code
 examples.
 
-
-
 We also provide a PDF file that has color images of the screenshots/diagrams used in this book. [Click here to download it](https://packt.link/7xy1O).
 
-
 ### Related products <Other books you may enjoy>
-* Causal Inference and Discovery in Python [[Packt]](https://www.packtpub.com/product/causal-inference-and-discovery-in-python/9781804612989) [[Amazon]](https://www.amazon.com/dp/1804612987)
 
-* Hands-On Simulation Modeling with Python [[Packt]](https://www.packtpub.com/product/hands-on-simulation-modeling-with-python-second-edition/9781804616888) [[Amazon]](https://www.amazon.com/dp/1804616885)
+- Causal Inference and Discovery in Python [[Packt]](https://www.packtpub.com/product/causal-inference-and-discovery-in-python/9781804612989) [[Amazon]](https://www.amazon.com/dp/1804612987)
+
+- Hands-On Simulation Modeling with Python [[Packt]](https://www.packtpub.com/product/hands-on-simulation-modeling-with-python-second-edition/9781804616888) [[Amazon]](https://www.amazon.com/dp/1804616885)
 
 ## Get to Know the Authors
+
 **Dr. Matt Benatan**
 is a principal research scientist at Sonos, where he leads research into
 intelligent personalization systems. He has also been awarded a Simon Industrial Fellowship
@@ -95,6 +85,6 @@ is an applied scientist in machine learning and computer vision. He
 received his Ph.D. in computational visual neuroscience from the University of Maastricht.
 He has since transitioned from academia to industry, where he has developed and applied
 machine learning solutions to a wide range of products, from brain image segmentation to
-uncertainty estimation, to smarter image capturing on mobile phone devices. Marian is grateful to his partner, Undine, 
+uncertainty estimation, to smarter image capturing on mobile phone devices. Marian is grateful to his partner, Undine,
 who was very supportive of the book writing process and enabled many writing and working sessions on this book, especially during
 weekends.
